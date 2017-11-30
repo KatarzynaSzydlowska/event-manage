@@ -1,14 +1,18 @@
-<h1>{{ event.name }}</h1>
-<h3>Date: {{ event.date }}</h3>
-<h4>Description: {{ event.description }}</h4>
-<h4>Spots: {{ event.spots }}</h4>
-<h4>Location: {{ event.location }}</h4>
-<h4>Price: {{ event.price }}</h4>
-<h4>Enrollment begins: {{ event.enrollment_begin }}</h4>
-<h4>Enrollment ends: {{ event.enrollment_end }}</h4>
-<h4>Owner: {{ event.owner.username }}</h4>
-<ul>
-    {% for user in event.participants.all %}
-    <li>{{ user.username }}</a></li>
-    {% endfor %}
-</ul>
+{% extends 'cosine/base.html'%}
+{% block title %}Event details{% endblock %}
+{% block body %}
+    <h1>{{ event.name }}</h1>
+    <h3>Date: {{ event.date }}</h3>
+    <h4>Description: {{ event.description }}</h4>
+    <h4>Spots: {{ event.spots }}</h4>
+    <h4>Location: {{ event.location }}</h4>
+    <h4>Price: {{ event.price }}</h4>
+    <h4>Enrollment begins: {{ event.enrollment_begin }}</h4>
+    <h4>Enrollment ends: {{ event.enrollment_end }}</h4>
+    <h4>Owner: {{ event.owner.username }}</h4>
+    <ul>
+        {% for user in event.participants.all %}
+        <li>{{ user.username }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

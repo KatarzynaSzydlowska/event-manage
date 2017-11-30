@@ -3,6 +3,5 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^cosine/', include('cosine.urls')),
-    url(r'^$', include('cosine.urls')),
+    url(r'^', include('cosine.urls')),
 ]

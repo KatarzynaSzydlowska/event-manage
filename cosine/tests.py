@@ -41,6 +41,6 @@ class ViewTestCase(TestSetup):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'cosine/detail.html')
 
-    def test_call_detail_loads(self):
+    def test_call_detail_returns_404_for_nonexistent_website(self):
         response = self.client.get('/{}'.format(10000))
         self.assertEqual(response.status_code, 404)

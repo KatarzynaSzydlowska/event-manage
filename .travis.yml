@@ -12,6 +12,8 @@ install:
   - pip install -q Django==$DJANGO_VERSION
   - pip install coveralls
 script:
-  - python manage.py test
+  - python manage.py makemigrations
+  - python manage.py migrate
+  - python manage.py test cosine
   - coverage run --source='.' manage.py test
 after_success: coveralls

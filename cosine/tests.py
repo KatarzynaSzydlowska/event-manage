@@ -153,3 +153,4 @@ class FormTest(TestCase):
                                 'password2':'12345',
                                 'password':'12345'})
         self.assertFalse(form.is_valid())
+

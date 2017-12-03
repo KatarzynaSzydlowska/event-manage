@@ -13,11 +13,18 @@ class TestSetup(TestCase):
                                      owner=self.user_1)
         self.event.participants.add(self.user_1, self.user_2)
         self.event.save()
+        self.user3 = User.objects.create_user(username='user1', 
+                                        password='12345', 
+                                        first_name = 'Us', 
+                                        last_name = 'Er', 
+                                        email = 'user@user.com') 
+        self.user3.save()
 
     def tearDown(self):
         self.user_1.delete()
         self.user_2.delete()
         self.event.delete()
+        self.user3.delete()
 
 
 class EventTestCase(TestSetup):
@@ -30,13 +37,13 @@ class EventTestCase(TestSetup):
 
 
 class ViewTestCase(TestSetup):
-    def setUp(self):
-        self.user1 = User.objects.create_user(username='user1', 
-                                        password='12345', 
-                                        first_name = 'Us', 
-                                        last_name = 'Er', 
-                                        email = 'user@user.com') 
-        self.user1.save()
+    #def setUp(self):
+        #self.user1 = User.objects.create_user(username='user1', 
+        #                                password='12345', 
+        #                                first_name = 'Us', 
+        #                                last_name = 'Er', 
+        #                                email = 'user@user.com') 
+        #self.user1.save()
 
     #def test_call_index_loads(self):
     #    response = self.client.get('/')

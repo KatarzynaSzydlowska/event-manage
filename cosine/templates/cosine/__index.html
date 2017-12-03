@@ -1,8 +1,0 @@
-{% extends 'cosine/base.html'%}
-{% block body %}
-    <ul>
-        {% for event in all_events %}
-        <li><a href="{% url 'cosine:detail' event.id %}"> {{ event.name }}</a></li>
-        {% endfor %}
-    </ul>
-{% endblock %}

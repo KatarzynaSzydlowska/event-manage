@@ -6,10 +6,6 @@ from .forms import LoginForm, RegistrationForm
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
-#def index(request):
-#    context = {'all_events': Event.objects.all()}
-#    return render(request, 'cosine/index.html', context)
-
 
 def detail(request, event_id):
     context = {'event': get_object_or_404(Event, pk=event_id)}

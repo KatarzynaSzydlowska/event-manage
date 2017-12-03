@@ -37,18 +37,6 @@ class EventTestCase(TestSetup):
 
 
 class ViewTestCase(TestSetup):
-    #def setUp(self):
-        #self.user1 = User.objects.create_user(username='user1', 
-        #                                password='12345', 
-        #                                first_name = 'Us', 
-        #                                last_name = 'Er', 
-        #                                email = 'user@user.com') 
-        #self.user1.save()
-
-    #def test_call_index_loads(self):
-    #    response = self.client.get('/')
-    #    self.assertEqual(response.status_code, 200)
-    #    self.assertTemplateUsed(response, 'cosine/index.html')
 
     def test_call_detail_loads(self):
         response = self.client.get('/{}'.format(self.event.id))

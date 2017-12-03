@@ -3,7 +3,6 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-    #url(r'^$', views.index, name="index"),
     url(r'^(?P<event_id>[0-9]+)$', views.detail, name="detail"),
 	url(r'^register/$', views.register, name='register'),
     url(r'^login/$', auth_views.login, name='login'),

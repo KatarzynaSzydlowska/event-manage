@@ -31,12 +31,12 @@ class EventTestCase(TestSetup):
 
 class ViewTestCase(TestSetup):
     def setUp(self):
-        user1 = User.objects.create_user(username='user1', 
+        self.user1 = User.objects.create_user(username='user1', 
                                         password='12345', 
                                         first_name = 'Us', 
                                         last_name = 'Er', 
                                         email = 'user@user.com') 
-        user1.save()
+        self.user1.save()
 
     #def test_call_index_loads(self):
     #    response = self.client.get('/')

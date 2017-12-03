@@ -2,7 +2,7 @@ from django.test import TestCase
 from cosine.models import Event
 from django.contrib.auth.models import User
 from django.utils import timezone
-from account.forms import LoginForm, RegistrationForm
+from cosine.forms import LoginForm, RegistrationForm
 
 class TestSetup(TestCase):
     def setUp(self):

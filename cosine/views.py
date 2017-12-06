@@ -23,7 +23,7 @@ def register(request):
             return render(request, 'cosine/register_done.html', {'new_user': new_user})
     else:
         user_form = RegistrationForm()
-        return render(request, 'cosine/register.html', {'user_form': user_form})
+    return render(request, 'cosine/register.html', {'user_form': user_form})
 
 
 @login_required
@@ -42,4 +42,4 @@ def add_event(request):
             return redirect('detail',event_id=new_event.id)
     else:
         event_form = EventForm()
-        return render(request, 'cosine/add_event.html', {'event_form': event_form})
+    return render(request, 'cosine/add_event.html', {'event_form': event_form})

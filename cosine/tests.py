@@ -109,6 +109,44 @@ class ViewTestCase(TestSetup):
                                                    'password': 'acbce'}, follow=True)
         self.assertTemplateUsed(response, 'cosine/register.html')
 
+    def test_add_event_form_loads_correctly_for_logged_in_user(self):
+        self.client.login(username='user1', password='12345')
+        response = self.client.get('/add-event', follow=True)
+        self.assertTemplateUsed(response, 'cosine/add_event.html')
+
+    def test_add_event_form_does_not_load_for_unauthorised_user(self):
+        response = self.client.get('/add-event', follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'registration/login.html')
+
+    def test_add_event_view_if_success(self):
+        self.client.login(username='user1', password='12345')
+
+        response = self.client.post('/add-event/', {'name': 'event1',
+                                                    'date': '2012-12-12 12:12:12',
+                                                    'description': 'test',
+                                                    'spots': '1',
+                                                    'location': 'test',
+                                                    'price': '12345',
+                                                    'enrollment_begin': '2012-12-12 12:12:12',
+                                                    'enrollment_end': '2012-12-12 12:12:12',
+                                                    }, follow=True)
+        self.assertTemplateUsed(response, 'cosine/detail.html')
+
+    def test_add_event_view_if_failed(self):
+        self.client.login(username='user1', password='12345')
+
+        response = self.client.post('/add-event/', {'name': 'event1',
+                                                    'date': '2012-12-12 12:12:12',
+                                                    'description': 'test',
+                                                    'spots': 'asd',  # text instead of int
+                                                    'location': 'test',
+                                                    'price': '12345',
+                                                    'enrollment_begin': '2012-12-12 12:12:12',
+                                                    'enrollment_end': '2012-12-12 12:12:12',
+                                                    }, follow=True)
+        self.assertTemplateUsed(response, 'cosine/add_event.html')
+
 
 class FormTest(TestCase):
     def test_login_form_validation(self):

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Create event{% endblock %}
+{% block body %}
+<script type="text/javascript">
+  $(function() {
+    $('.datetimepicker').datetimepicker({
+            format:'YYYY-MM-DD HH:mm:ss'
+        });
+  });
+</script>
+<h1>Create event</h1>
+<p>Fill out the form to add new event:</p>
+<form action="." method="post">
+    <table>
+        {{ event_form.as_table }}
+    </table>
+{% csrf_token %}
+<p><button type="submit" class="btn btn-primary active">Create event</button></p>
+</form>
+{% endblock %}

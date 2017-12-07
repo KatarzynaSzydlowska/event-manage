@@ -2,6 +2,7 @@ from django.test import TestCase
 from cosine.models import Event
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.shortcuts import reverse
 from cosine.forms import LoginForm, RegistrationForm
 
 
@@ -39,12 +40,14 @@ class EventTestCase(TestSetup):
 
 class ViewTestCase(TestSetup):
     def test_call_detail_loads(self):
-        response = self.client.get('/{}'.format(self.event.id))
+        self.client.login(username='user1', password='12345')
+        response = self.client.get(reverse('detail', kwargs={ 'event_id':self.event.id}))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'cosine/detail.html')
 
     def test_call_detail_returns_404_for_nonexistent_website(self):
-        response = self.client.get('/{}'.format(10000))
+        self.client.login(username='user1', password='12345')
+        response = self.client.get(reverse('detail', kwargs={ 'event_id':10000}))
         self.assertEqual(response.status_code, 404)
 
     def test_dashboard_redirect_if_not_logged_in(self):

@@ -7,6 +7,7 @@ class Event(models.Model):
     date = models.DateTimeField()
     description = models.CharField(max_length=1000)
     spots = models.IntegerField()
+    image = models.FileField(default='default.png')
     location = models.CharField(max_length=200)  # TODO,  change to some location framework
     price = models.FloatField()
     enrollment_begin = models.DateTimeField()

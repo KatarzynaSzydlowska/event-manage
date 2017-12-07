@@ -8,11 +8,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 
-def detail(request, event_id):
-    context = {'event': get_object_or_404(Event, pk=event_id)}
-    return render(request, 'cosine/detail.html', context)
-
-
 def register(request):
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST)
@@ -34,12 +29,61 @@ def dashboard(request):
 @login_required
 def add_event(request):
     if request.method == 'POST':
-        event_form = EventForm(request.POST)
+        event_form = EventForm(request.POST, request.FILES or None)
         if event_form.is_valid():
             new_event = event_form.save(commit=False)
+            if 'image' in request.FILES:
+                new_event.image = request.FILES['image']
             new_event.owner = User.objects.get(id=request.user.id)
             new_event.save()
-            return redirect('detail',event_id=new_event.id)
+            return redirect('detail', event_id=new_event.id)
     else:
         event_form = EventForm()
     return render(request, 'cosine/add_event.html', {'event_form': event_form})
+
+
+@login_required
+def detail(request, event_id):
+    context = {'event': get_object_or_404(Event, pk=event_id)}
+    return render(request, 'cosine/detail.html', context)
+
+
+@login_required
+def event_list_owned(request):
+    context = {'events': Event.objects.filter(owner__id=request.user.id),'type': 'owned'}
+    return render(request, 'cosine/list.html', context)
+
+
+@login_required
+def event_list_enrolled(request):
+    context = {'events': Event.objects.filter(participants__id=request.user.id),'type': 'enrolled'}
+    return render(request, 'cosine/list.html', context)
+
+
+@login_required
+def event_list_available(request):
+    context = {'events': Event.objects.all().exclude(owner__id=request.user.id).exclude(participants__id=request.user.id),'type': 'available'}
+    return render(request, 'cosine/list.html', context)
+
+
+@login_required
+def enroll(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    event.participants.add(request.user)
+    event.save()
+    return redirect('detail', event_id=event_id)
+
+
+@login_required
+def leave(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    event.participants.remove(request.user)
+    event.save()
+    return redirect('event_list_enrolled')
+
+
+@login_required
+def delete(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    event.delete()
+    return redirect('event_list_owned')

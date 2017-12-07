@@ -2,6 +2,7 @@
 {% block title %}Event details{% endblock %}
 {% block body %}
     <h1>{{ event.name }}</h1>
+    <center><img src="{{ event.image.url }}" class="img-responsive" align="middle"></center>
     <h3>Date: {{ event.date }}</h3>
     <h4>Description: {{ event.description }}</h4>
     <h4>Spots: {{ event.spots }}</h4>

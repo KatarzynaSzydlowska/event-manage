@@ -6,7 +6,7 @@ from .forms import LoginForm, RegistrationForm, EventForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-
+from django.http import HttpResponseForbidden
 
 def register(request):
     if request.method == 'POST':
@@ -85,5 +85,8 @@ def leave(request, event_id):
 @login_required
 def delete(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
-    event.delete()
-    return redirect('event_list_owned')
+    if request.user.id == event.owner.id:
+        event.delete()
+        return redirect('event_list_owned')
+    else:
+        return HttpResponseForbidden("Only owner can delete an event!")

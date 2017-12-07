@@ -4,7 +4,9 @@
 <h1>Create account</h1>
 <p>Fill out the form to register:</p>
 <form action="." method="post">
-{{ user_form.as_p }}
+    <table>
+        {{ user_form.as_table }}
+    </table>
 {% csrf_token %}
 <p><button type="submit" class="btn btn-primary active">Create account</button></p>
 </form>

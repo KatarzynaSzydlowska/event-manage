@@ -8,8 +8,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 class TestSetup(TestCase):
-    @classmethod
-    def setUpTestData(self):
+    def setUp(self):
         self.user_1 = User.objects.create_user("test_user",password='12345')
         self.user_2 = User.objects.create_user("test_user_2",password='12345')
         self.event = Event.objects.create(name="test", date=timezone.now(), description="test event", spots=10,
@@ -30,8 +29,7 @@ class TestSetup(TestCase):
                                               email='user@user.com')
         self.user3.save()
 
-    @classmethod
-    def tearDownTestData(self):
+    def tearDown(self):
         self.user_1.delete()
         self.user_2.delete()
         self.event.delete()

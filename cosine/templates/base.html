@@ -69,9 +69,9 @@
             <div class="collapse navbar-collapse" id="topNavBar">
 				{% if request.user.is_authenticated %}
                 <ul class="nav navbar-nav">
-                    <li class=""><a href="{% url 'dashboard' %}">Owned Events</a></li>
-                    <li class=""><a href="{% url 'dashboard' %}">Available Events</a></li>
-                    <li class=""><a href="{% url 'dashboard' %}">Enrolled Events</a></li>
+                    <li class=""><a href="{% url 'event_list_owned' %}">Owned Events</a></li>
+                    <li class=""><a href="{% url 'event_list_available' %}">Available Events</a></li>
+                    <li class=""><a href="{% url 'event_list_enrolled' %}">Enrolled Events</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class=""><a href="{% url 'add_event' %}">Add Events</a></li>

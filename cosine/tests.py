@@ -46,7 +46,19 @@ class EventTestCase(TestSetup):
 
 
 class ViewTestCase(TestSetup):
-    def test_call_detail_loads(self):
+    def test_call_detail_loads_if_owner(self):
+        self.client.login(username='test_user', password='12345')
+        response = self.client.get(reverse('detail', kwargs={'event_id': self.event.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cosine/owner_detail.html')
+
+	def test_call_detail_loads_if_enrolled_user(self):
+        self.client.login(username='test_user_2', password='12345')
+        response = self.client.get(reverse('detail', kwargs={'event_id': self.event.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cosine/user_detail.html')
+
+	def test_call_detail_loads_if_not_enrolled_user(self):
         self.client.login(username='user1', password='12345')
         response = self.client.get(reverse('detail', kwargs={'event_id': self.event.id}))
         self.assertEqual(response.status_code, 200)
@@ -123,6 +135,16 @@ class ViewTestCase(TestSetup):
         self.client.login(username='user1', password='12345')
         response = self.client.get('/add-event', follow=True)
         self.assertTemplateUsed(response, 'cosine/add_event.html')
+
+	def test_edit_event_form_loads_correctly_for_event_owner(self):
+        self.client.login(username='test_user', password='12345')
+        response = self.client.get('/edit-event', follow=True)
+        self.assertTemplateUsed(response, 'cosine/edit_event.html')
+
+	def test_edit_event_form_loads_correctly_for_not_event_owner(self):
+        self.client.login(username='test_user', password='12345')
+        response = self.client.get('/add-event', follow=True)
+        self.assertTemplateUsed(response, 'cosine/edit_event.html')
 
     def test_add_event_form_does_not_load_for_unauthorised_user(self):
         response = self.client.get('/add-event', follow=True)

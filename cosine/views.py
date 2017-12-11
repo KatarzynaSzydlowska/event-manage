@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.views.generic import View
 from .forms import LoginForm, RegistrationForm, EventForm
 from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden
 
@@ -41,11 +41,51 @@ def add_event(request):
         event_form = EventForm()
     return render(request, 'cosine/add_event.html', {'event_form': event_form})
 
+@login_required
+def edit_event(request, event_id):
+    if True:#request.method == 'POST':
+        event = get_object_or_404(Event, pk=event_id)
+        if request.user.id == event.owner.id:
+            event_form = EventForm(request.POST or None, request.FILES or None, instance=event)
+            if event_form.is_valid():
+                event = event_form.save(commit=False)
+                if 'image' in request.FILES:
+                    event.image = request.FILES['image']
+                event.save()
+                print("\n\n\nsave")
+                return redirect('detail', event.id)
+        else:
+            return HttpResponseForbidden("Only owner can edit an event!")
+    return render(request, 'cosine/edit_event.html', {'event_form': event_form})
+
+@login_required
+def redit_event(request, event_id=1):
+    event = get_object_or_404(Event, pk=event_id)
+    if request.user.id == event.owner.id:
+        if request.method == 'POST':
+            event_form = EventForm(request.POST or None, request.FILES or None, instance=event)
+            if event_form.is_valid():
+                event = event_form.save(commit=False)
+                if 'image' in request.FILES:
+                    new_event.image = request.FILES['image']
+                event.owner = User.objects.get(id=request.user.id)
+                event.save()
+                return redirect('detail', event_id=event.id)
+        else:
+            event_form = EventForm(instance=event)
+        return render(request, 'cosine/edit_event.html', {'event_form': event_form})
+    return HttpResponseForbidden("Only owner can edit an event!")
 
 @login_required
 def detail(request, event_id):
     context = {'event': get_object_or_404(Event, pk=event_id)}
-    return render(request, 'cosine/detail.html', context)
+    event = get_object_or_404(Event, pk=event_id)
+    if request.user.id == event.owner.id:
+        return render(request, 'cosine/owner_detail.html', context)
+    elif request.user in event.participants.all():
+        return render(request, 'cosine/user_detail.html', context)
+    else:
+        return render(request, 'cosine/detail.html', context)
 
 
 @login_required

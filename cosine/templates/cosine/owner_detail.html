@@ -1,6 +1,12 @@
 {% extends 'base.html'%}
 {% block title %}Event details{% endblock %}
 {% block body %}
+<div class="well">
+	<p>You are owner of this event!</p>
+	<a href="{% url 'edit_event' event.id %}" class="btn btn-primary active" role="button">Edit event</a>
+</div>
+
+
 
 <div class="well">
 	<h1>{{ event.name }}</h1>
@@ -36,4 +42,17 @@
 	</p>
 </div>
 
+<div class="well text-left">
+	<p>Reserve list:</p>
+	<p>
+		(in future)
+	</p>
+</div>
+
+<div class="well text-left">
+	<p>Forum:</p>
+	<p>
+		(in future)
+	</p>
+</div>
 {% endblock %}

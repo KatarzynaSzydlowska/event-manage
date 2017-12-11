@@ -138,13 +138,13 @@ class ViewTestCase(TestSetup):
 
     def test_edit_event_form_loads_correctly_for_event_owner(self):
         self.client.login(username='test_user', password='12345')
-        response = self.client.get('/edit-event', follow=True)
+        response = self.client.get(reverse('edit_event', kwargs={'event_id': 1}), follow=True)
         self.assertTemplateUsed(response, 'cosine/edit_event.html')
 
     def test_edit_event_form_loads_correctly_for_not_event_owner(self):
-        self.client.login(username='test_user', password='12345')
-        response = self.client.get('/add-event', follow=True)
-        self.assertTemplateUsed(response, 'cosine/edit_event.html')
+        self.client.login(username='test_user_2', password='12345')
+        response = self.client.get(reverse('edit_event', kwargs={'event_id': 1}), follow=True)
+        self.assertEqual(response.status_code, 403)
 
     def test_add_event_form_does_not_load_for_unauthorised_user(self):
         response = self.client.get('/add-event', follow=True)
@@ -163,7 +163,7 @@ class ViewTestCase(TestSetup):
                                                     'enrollment_begin': '2012-12-12 12:12:12',
                                                     'enrollment_end': '2012-12-12 12:12:12',
                                                     }, follow=True)
-        self.assertTemplateUsed(response, 'cosine/detail.html')
+        self.assertTemplateUsed(response, 'cosine/owner_detail.html')
 
     def test_add_event_view_if_failed(self):
         self.client.login(username='user1', password='12345')
@@ -193,7 +193,35 @@ class ViewTestCase(TestSetup):
                          'enrollment_end': '2012-12-12 12:12:12',
                          }
             response = self.client.post('/add-event/', post_dict, follow=True)
-            self.assertTemplateUsed(response, 'cosine/detail.html')
+            self.assertTemplateUsed(response, 'cosine/owner_detail.html')
+
+    def test_edit_event_view_if_owner(self):
+        self.client.login(username='test_user', password='12345')
+
+        response = self.client.post('/event/1/edit-event', {'name': 'event1',
+                                                    'date': '2012-12-12 12:12:12',
+                                                    'description': 'test',
+                                                    'spots': '1',
+                                                    'location': 'test',
+                                                    'price': '12345',
+                                                    'enrollment_begin': '2012-12-12 12:12:12',
+                                                    'enrollment_end': '2012-12-12 12:12:12',
+                                                    }, follow=True)
+        self.assertTemplateUsed(response, 'cosine/edit_event.html')
+
+    def test_edit_event_view_if_not_owner(self):
+        self.client.login(username='test_user_2', password='12345')
+
+        response = self.client.post('/event/1/edit-event/', {'name': 'event1',
+                                                    'date': '2012-12-12 12:12:12',
+                                                    'description': 'test',
+                                                    'spots': '1',
+                                                    'location': 'test',
+                                                    'price': '12345',
+                                                    'enrollment_begin': '2012-12-12 12:12:12',
+                                                    'enrollment_end': '2012-12-12 12:12:12',
+                                                    }, follow=True)
+        self.assertEqual(response.status_code, 403)
 
     def test_event_list_owned_view(self):
         self.client.login(username='test_user', password='12345')
@@ -217,7 +245,7 @@ class ViewTestCase(TestSetup):
         user = User.objects.create_user("test_user_3", password='12345')
         self.client.login(username='test_user_3', password='12345')
         response = self.client.get(reverse('enroll', kwargs={'event_id': self.event.id}), follow=True)
-        self.assertTemplateUsed(response, 'cosine/detail.html')
+        self.assertTemplateUsed(response, 'cosine/user_detail.html')
         self.assertTrue(user in self.event.participants.all())
 
     def test_leave_view(self):

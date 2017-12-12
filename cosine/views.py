@@ -42,15 +42,15 @@ def add_event(request):
     return render(request, 'cosine/add_event.html', {'event_form': event_form})
 
 @login_required
-def edit_event(request, event_id=1):
+def edit_event(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     if request.user.id == event.owner.id:
         if request.method == 'POST':
-            event_form = EventForm(request.POST or None, request.FILES or None, instance=event)
+            event_form = EventForm(request.POST, request.FILES or None, instance=event)
             if event_form.is_valid():
                 event = event_form.save(commit=False)
                 if 'image' in request.FILES:
-                    new_event.image = request.FILES['image']
+                    event.image = request.FILES['image']
                 event.owner = User.objects.get(id=request.user.id)
                 event.save()
                 return redirect('detail', event_id=event.id)

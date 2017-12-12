@@ -223,6 +223,17 @@ class ViewTestCase(TestSetup):
                                                     }, follow=True)
         self.assertEqual(response.status_code, 403)
 
+    def test_edit_event_view_get_request_if_owner(self):
+        self.client.login(username='test_user', password='12345')
+        response = self.client.get('/event/1/edit-event', follow=True)
+        self.assertTemplateUsed(response, 'cosine/edit_event.html')
+
+    def test_edit_event_view_get_request_if_not_owner(self):
+        self.client.login(username='test_user_2', password='12345')
+        response = self.client.get('/event/1/edit-event', follow=True)
+        self.assertEqual(response.status_code, 403)
+
+
     def test_event_list_owned_view(self):
         self.client.login(username='test_user', password='12345')
         response = self.client.get(reverse('event_list_owned'), follow=True)

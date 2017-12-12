@@ -8,12 +8,14 @@
 <p>Please fill out the form to login, or create new account <a href="{% url "register" %}">here</a>.</p>
 {% endif %}
 <div class="login-form">
-	<form action="{% url 'login' %}" method="post">
-	{{ form.as_p }}
-	{% csrf_token %}
-	<input type="hidden" name="next" value="{{ next }}" />
-	<p><button type="submit" class="btn btn-primary active">Login</button></p>
-	</form>
+    <form action="{% url 'login' %}" method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}"/>
+        <p>
+            <button type="submit" class="btn btn-primary active">Login</button>
+        </p>
+    </form>
 </div>
 
 {% endblock %}

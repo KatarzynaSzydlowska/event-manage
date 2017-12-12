@@ -32,7 +32,7 @@ class RegistrationForm(forms.ModelForm):
 class EventForm(forms.ModelForm):
     name = forms.CharField()
     date = forms.DateTimeField(widget=forms.widgets.DateInput(attrs={'class': 'datetimepicker'}))
-    description = forms.CharField()
+    description = forms.CharField(widget=forms.Textarea)
     spots = forms.IntegerField()
     location = forms.CharField()  # TODO,  change to some location framework
     price = forms.FloatField()
@@ -41,4 +41,5 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ['name', 'date', 'image', 'description', 'spots', 'location', 'price', 'enrollment_begin', 'enrollment_end']
+        fields = ['name', 'date', 'image', 'description', 'spots', 'location', 'price', 'enrollment_begin',
+                  'enrollment_end']

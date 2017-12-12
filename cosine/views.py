@@ -4,9 +4,10 @@ from django.contrib.auth import authenticate, login
 from django.views.generic import View
 from .forms import LoginForm, RegistrationForm, EventForm
 from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden
+
 
 def register(request):
     if request.method == 'POST':
@@ -43,26 +44,53 @@ def add_event(request):
 
 
 @login_required
+def edit_event(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    if request.user.id == event.owner.id:
+        if request.method == 'POST':
+            event_form = EventForm(request.POST, request.FILES or None, instance=event)
+            if event_form.is_valid():
+                event = event_form.save(commit=False)
+                if 'image' in request.FILES:
+                    event.image = request.FILES['image']
+                event.owner = User.objects.get(id=request.user.id)
+                event.save()
+                return redirect('detail', event_id=event.id)
+        else:
+            event_form = EventForm(instance=event)
+        return render(request, 'cosine/edit_event.html', {'event_form': event_form})
+    return HttpResponseForbidden("Only owner can edit an event!")
+
+
+@login_required
 def detail(request, event_id):
     context = {'event': get_object_or_404(Event, pk=event_id)}
-    return render(request, 'cosine/detail.html', context)
+    event = get_object_or_404(Event, pk=event_id)
+    if request.user.id == event.owner.id:
+        return render(request, 'cosine/owner_detail.html', context)
+    elif request.user in event.participants.all():
+        return render(request, 'cosine/user_detail.html', context)
+    else:
+        return render(request, 'cosine/detail.html', context)
 
 
 @login_required
 def event_list_owned(request):
-    context = {'events': Event.objects.filter(owner__id=request.user.id),'type': 'owned'}
+    context = {'events': Event.objects.filter(owner__id=request.user.id), 'type': 'owned'}
     return render(request, 'cosine/list.html', context)
 
 
 @login_required
 def event_list_enrolled(request):
-    context = {'events': Event.objects.filter(participants__id=request.user.id),'type': 'enrolled'}
+    context = {'events': Event.objects.filter(participants__id=request.user.id), 'type': 'enrolled'}
     return render(request, 'cosine/list.html', context)
 
 
 @login_required
 def event_list_available(request):
-    context = {'events': Event.objects.all().exclude(owner__id=request.user.id).exclude(participants__id=request.user.id),'type': 'available'}
+    context = {
+        'events': Event.objects.all().exclude(owner__id=request.user.id).exclude(participants__id=request.user.id),
+        'type': 'available'}
     return render(request, 'cosine/list.html', context)
 
 

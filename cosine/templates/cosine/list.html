@@ -1,56 +1,56 @@
 {% extends 'base.html'%}
 {% block title %}Event List{% endblock %}
 {% block body %}
-    <div class="events-container container-fluid">
-        <div class="row">
-            <div class="col-sm-12">
-                <h3>{{ type|title }} events</h3>
-            </div>
-            {% if events %}
-                {% for event in events %}
-                    <div class="col-sm-4 col-lg-2">
-                        <div class="thumbnail">
-                            <a href="{% url 'detail' event.id %}">
-                                <img src="{{ event.image.url }}" class="img-responsive">
-                            </a>
-                            <div class="caption">
-                                <h2>{{ event.name }}</h2>
-                                <h4>{{ event.location }}</h4>
+<div class="events-container container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>{{ type|title }} events</h3>
+        </div>
+        {% if events %}
+        {% for event in events %}
+        <div class="col-sm-4 col-lg-2">
+            <div class="thumbnail">
+                <a href="{% url 'detail' event.id %}">
+                    <img src="{{ event.image.url }}" class="img-responsive">
+                </a>
+                <div class="caption">
+                    <h2>{{ event.name }}</h2>
+                    <h4>{{ event.location }}</h4>
 
-                                <!-- View Details -->
-                                <a href="{% url 'detail' event.id %}" class="btn btn-primary btn-sm" role="button">View Details</a>
-                                {% if type == 'owned' %}
-                                    <form action="{% url 'delete' event.id %}" method="post" style="display: inline;">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="event_id" value="{{ event.id }}" />
-                                        <button type="submit" class="btn btn-default btn-sm">
-                                            <span class="glyphicon glyphicon-trash"></span>
-                                        </button>
-                                    </form>
-                                {% elif type == 'available' %}
-                                    <a href="{% url 'enroll' event.id %}" class="btn btn-primary btn-sm" role="button">Enroll</a>
-                                {% else %}
-                                    <a href="{% url 'leave' event.id %}" class="btn btn-primary btn-sm" role="button">Leave</a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    {% cycle '' '' '' '' '' '<div class="clearfix visible-lg"></div>' %}
-                {% endfor %}
-            {% else %}
-                <div class="col-sm-12">
-                    <br>
+                    <!-- View Details -->
+                    <a href="{% url 'detail' event.id %}" class="btn btn-primary btn-sm" role="button">View Details</a>
                     {% if type == 'owned' %}
-                    <a href="{% url 'add_event' %}">
-                        <button type="button" class="btn btn-success">
-                            <span class="glyphicon glyphicon-plus"></span>&nbsp; Add an Event
+                    <form action="{% url 'delete' event.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="event_id" value="{{ event.id }}"/>
+                        <button type="submit" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-trash"></span>
                         </button>
-                    </a>
+                    </form>
+                    {% elif type == 'available' %}
+                    <a href="{% url 'enroll' event.id %}" class="btn btn-primary btn-sm" role="button">Enroll</a>
                     {% else %}
-                        <h4>You currently have no {{ type }} events.</h4>
+                    <a href="{% url 'leave' event.id %}" class="btn btn-primary btn-sm" role="button">Leave</a>
                     {% endif %}
                 </div>
+            </div>
+        </div>
+        {% cycle '' '' '' '' '' '<div class="clearfix visible-lg"></div>' %}
+        {% endfor %}
+        {% else %}
+        <div class="col-sm-12">
+            <br>
+            {% if type == 'owned' %}
+            <a href="{% url 'add_event' %}">
+                <button type="button" class="btn btn-success">
+                    <span class="glyphicon glyphicon-plus"></span>&nbsp; Add an Event
+                </button>
+            </a>
+            {% else %}
+            <h4>You currently have no {{ type }} events.</h4>
             {% endif %}
         </div>
+        {% endif %}
     </div>
+</div>
 {% endblock %}

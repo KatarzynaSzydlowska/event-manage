@@ -9,8 +9,9 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 class TestSetup(TestCase):
     def setUp(self):
-        self.user_1 = User.objects.create_user("test_user",password='12345')
-        self.user_2 = User.objects.create_user("test_user_2",password='12345')
+        self.user_1 = User.objects.create_user("test_user", password='12345')
+        self.user_2 = User.objects.create_user("test_user_2", password='12345')
+        self.user_1.save()
         self.event = Event.objects.create(name="test", date=timezone.now(), description="test event", spots=10,
                                           price=100,
                                           enrollment_begin=timezone.now(), enrollment_end=timezone.now(),
@@ -18,9 +19,9 @@ class TestSetup(TestCase):
         self.event.participants.add(self.user_1, self.user_2)
         self.event.save()
         self.event2 = Event.objects.create(name="test", date=timezone.now(), description="test event", spots=10,
-                                          price=100,
-                                          enrollment_begin=timezone.now(), enrollment_end=timezone.now(),
-                                          owner=self.user_2)
+                                           price=100,
+                                           enrollment_begin=timezone.now(), enrollment_end=timezone.now(),
+                                           owner=self.user_2)
         self.event2.save()
         self.user3 = User.objects.create_user(username='user1',
                                               password='12345',
@@ -46,7 +47,19 @@ class EventTestCase(TestSetup):
 
 
 class ViewTestCase(TestSetup):
-    def test_call_detail_loads(self):
+    def test_call_detail_loads_if_owner(self):
+        self.client.login(username='test_user', password='12345')
+        response = self.client.get(reverse('detail', kwargs={'event_id': self.event.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cosine/owner_detail.html')
+
+    def test_call_detail_loads_if_enrolled_user(self):
+        self.client.login(username='test_user_2', password='12345')
+        response = self.client.get(reverse('detail', kwargs={'event_id': self.event.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'cosine/user_detail.html')
+
+    def test_call_detail_loads_if_not_enrolled_user(self):
         self.client.login(username='user1', password='12345')
         response = self.client.get(reverse('detail', kwargs={'event_id': self.event.id}))
         self.assertEqual(response.status_code, 200)
@@ -124,6 +137,16 @@ class ViewTestCase(TestSetup):
         response = self.client.get('/add-event', follow=True)
         self.assertTemplateUsed(response, 'cosine/add_event.html')
 
+    def test_edit_event_form_loads_correctly_for_event_owner(self):
+        self.client.login(username='test_user', password='12345')
+        response = self.client.get(reverse('edit_event', kwargs={'event_id': 1}), follow=True)
+        self.assertTemplateUsed(response, 'cosine/edit_event.html')
+
+    def test_edit_event_form_loads_correctly_for_not_event_owner(self):
+        self.client.login(username='test_user_2', password='12345')
+        response = self.client.get(reverse('edit_event', kwargs={'event_id': 1}), follow=True)
+        self.assertEqual(response.status_code, 403)
+
     def test_add_event_form_does_not_load_for_unauthorised_user(self):
         response = self.client.get('/add-event', follow=True)
         self.assertEqual(response.status_code, 200)
@@ -141,7 +164,7 @@ class ViewTestCase(TestSetup):
                                                     'enrollment_begin': '2012-12-12 12:12:12',
                                                     'enrollment_end': '2012-12-12 12:12:12',
                                                     }, follow=True)
-        self.assertTemplateUsed(response, 'cosine/detail.html')
+        self.assertTemplateUsed(response, 'cosine/owner_detail.html')
 
     def test_add_event_view_if_failed(self):
         self.client.login(username='user1', password='12345')
@@ -171,7 +194,61 @@ class ViewTestCase(TestSetup):
                          'enrollment_end': '2012-12-12 12:12:12',
                          }
             response = self.client.post('/add-event/', post_dict, follow=True)
-            self.assertTemplateUsed(response, 'cosine/detail.html')
+            self.assertTemplateUsed(response, 'cosine/owner_detail.html')
+
+    def test_edit_event_view_if_succes_with_pic(self):
+        self.client.login(username='test_user', password='12345')
+        with open('media/default.png', 'rb') as upload_file:
+            post_dict = {'name': 'event1',
+                         'date': '2012-12-12 12:12:12',
+                         'image': SimpleUploadedFile(upload_file.name, upload_file.read()),
+                         'description': 'test',
+                         'spots': '1',
+                         'location': 'test',
+                         'price': '12345',
+                         'enrollment_begin': '2012-12-12 12:12:12',
+                         'enrollment_end': '2012-12-12 12:12:12',
+                         }
+            response = self.client.post('/event/{}/edit-event/'.format(self.event.id), post_dict, follow=True)
+            self.assertTemplateUsed(response, 'cosine/owner_detail.html')
+
+    def test_edit_event_view_if_owner(self):
+        self.client.login(username='test_user', password='12345')
+
+        response = self.client.post('/event/{}/edit-event/'.format(self.event.id), {'name': 'event1',
+                                                                                    'date': '2012-12-12 12:12:12',
+                                                                                    'description': 'test',
+                                                                                    'spots': '1',
+                                                                                    'location': 'test',
+                                                                                    'price': '12345',
+                                                                                    'enrollment_begin': '2012-12-12 12:12:12',
+                                                                                    'enrollment_end': '2012-12-12 12:12:12',
+                                                                                    }, follow=True)
+        self.assertTemplateUsed(response, 'cosine/owner_detail.html')
+
+    def test_edit_event_view_if_not_owner(self):
+        self.client.login(username='test_user_2', password='12345')
+
+        response = self.client.post('/event/1/edit-event/', {'name': 'event1',
+                                                             'date': '2012-12-12 12:12:12',
+                                                             'description': 'test',
+                                                             'spots': '1',
+                                                             'location': 'test',
+                                                             'price': '12345',
+                                                             'enrollment_begin': '2012-12-12 12:12:12',
+                                                             'enrollment_end': '2012-12-12 12:12:12',
+                                                             }, follow=True)
+        self.assertEqual(response.status_code, 403)
+
+    def test_edit_event_view_get_request_if_owner(self):
+        self.client.login(username='test_user', password='12345')
+        response = self.client.get('/event/1/edit-event/', follow=True)
+        self.assertTemplateUsed(response, 'cosine/edit_event.html')
+
+    def test_edit_event_view_get_request_if_not_owner(self):
+        self.client.login(username='test_user_2', password='12345')
+        response = self.client.get('/event/1/edit-event/', follow=True)
+        self.assertEqual(response.status_code, 403)
 
     def test_event_list_owned_view(self):
         self.client.login(username='test_user', password='12345')
@@ -195,7 +272,7 @@ class ViewTestCase(TestSetup):
         user = User.objects.create_user("test_user_3", password='12345')
         self.client.login(username='test_user_3', password='12345')
         response = self.client.get(reverse('enroll', kwargs={'event_id': self.event.id}), follow=True)
-        self.assertTemplateUsed(response, 'cosine/detail.html')
+        self.assertTemplateUsed(response, 'cosine/user_detail.html')
         self.assertTrue(user in self.event.participants.all())
 
     def test_leave_view(self):
@@ -208,9 +285,9 @@ class ViewTestCase(TestSetup):
 
     def test_delete_view(self):
         event = Event.objects.create(name="test", date=timezone.now(), description="test event", spots=10,
-                                          price=100,
-                                          enrollment_begin=timezone.now(), enrollment_end=timezone.now(),
-                                          owner=self.user_2)
+                                     price=100,
+                                     enrollment_begin=timezone.now(), enrollment_end=timezone.now(),
+                                     owner=self.user_2)
         event.save()
         self.client.login(username='test_user_2', password='12345')
         response = self.client.get(reverse('delete', kwargs={'event_id': event.id}), follow=True)
@@ -219,13 +296,14 @@ class ViewTestCase(TestSetup):
 
     def test_delete_view_non_owner_cant_delete(self):
         event = Event.objects.create(name="test", date=timezone.now(), description="test event", spots=10,
-                                          price=100,
-                                          enrollment_begin=timezone.now(), enrollment_end=timezone.now(),
-                                          owner=self.user_2)
+                                     price=100,
+                                     enrollment_begin=timezone.now(), enrollment_end=timezone.now(),
+                                     owner=self.user_2)
         event.save()
         self.client.login(username='user1', password='12345')
         response = self.client.post(reverse('delete', kwargs={'event_id': event.id}), follow=True)
         self.assertEqual(response.status_code, 403)
+
 
 class FormTest(TestCase):
     def test_login_form_validation(self):

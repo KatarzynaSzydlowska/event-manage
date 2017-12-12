@@ -7,7 +7,9 @@
     <table>
         {{ user_form.as_table }}
     </table>
-{% csrf_token %}
-<p><button type="submit" class="btn btn-primary active">Create account</button></p>
+    {% csrf_token %}
+    <p>
+        <button type="submit" class="btn btn-primary active">Create account</button>
+    </p>
 </form>
 {% endblock %}

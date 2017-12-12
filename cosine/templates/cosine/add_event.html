@@ -7,6 +7,8 @@
             format:'YYYY-MM-DD HH:mm:ss'
         });
   });
+
+
 </script>
 <h1>Create event</h1>
 <p>Fill out the form to add new event:</p>
@@ -14,7 +16,9 @@
     <table>
         {{ event_form.as_table }}
     </table>
-{% csrf_token %}
-<p><button type="submit" class="btn btn-primary active">Create event</button></p>
+    {% csrf_token %}
+    <p>
+        <button type="submit" class="btn btn-primary active">Create event</button>
+    </p>
 </form>
 {% endblock %}

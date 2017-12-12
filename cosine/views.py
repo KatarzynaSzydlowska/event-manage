@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden
 
+
 def register(request):
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST)
@@ -41,6 +42,7 @@ def add_event(request):
         event_form = EventForm()
     return render(request, 'cosine/add_event.html', {'event_form': event_form})
 
+
 @login_required
 def edit_event(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
@@ -59,6 +61,7 @@ def edit_event(request, event_id):
         return render(request, 'cosine/edit_event.html', {'event_form': event_form})
     return HttpResponseForbidden("Only owner can edit an event!")
 
+
 @login_required
 def detail(request, event_id):
     context = {'event': get_object_or_404(Event, pk=event_id)}
@@ -73,19 +76,21 @@ def detail(request, event_id):
 
 @login_required
 def event_list_owned(request):
-    context = {'events': Event.objects.filter(owner__id=request.user.id),'type': 'owned'}
+    context = {'events': Event.objects.filter(owner__id=request.user.id), 'type': 'owned'}
     return render(request, 'cosine/list.html', context)
 
 
 @login_required
 def event_list_enrolled(request):
-    context = {'events': Event.objects.filter(participants__id=request.user.id),'type': 'enrolled'}
+    context = {'events': Event.objects.filter(participants__id=request.user.id), 'type': 'enrolled'}
     return render(request, 'cosine/list.html', context)
 
 
 @login_required
 def event_list_available(request):
-    context = {'events': Event.objects.all().exclude(owner__id=request.user.id).exclude(participants__id=request.user.id),'type': 'available'}
+    context = {
+        'events': Event.objects.all().exclude(owner__id=request.user.id).exclude(participants__id=request.user.id),
+        'type': 'available'}
     return render(request, 'cosine/list.html', context)
 
 

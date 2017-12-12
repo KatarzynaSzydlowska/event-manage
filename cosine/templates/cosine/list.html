@@ -27,9 +27,9 @@
                             <span class="glyphicon glyphicon-trash"></span>
                         </button>
                     </form>
-                    {% elif type == 'available' %}
+                    {% elif type == 'available' and event.can_enroll%}
                     <a href="{% url 'enroll' event.id %}" class="btn btn-primary btn-sm" role="button">Enroll</a>
-                    {% else %}
+                    {% elif type == 'enrolled' %}
                     <a href="{% url 'leave' event.id %}" class="btn btn-primary btn-sm" role="button">Leave</a>
                     {% endif %}
                 </div>

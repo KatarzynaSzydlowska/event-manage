@@ -43,3 +43,15 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = ['name', 'date', 'image', 'description', 'spots', 'location', 'price', 'enrollment_begin',
                   'enrollment_end']
+
+    def clean_spots(self):
+        cd = self.cleaned_data
+        if cd['spots']<0:
+            raise forms.ValidationError("You need to declare number of spots greater than 0!")
+        return cd['spots']
+
+    def clean_price(self):
+        cd = self.cleaned_data
+        if cd['price']<0:
+            raise forms.ValidationError("Price should be at least 0!")
+        return cd['price']

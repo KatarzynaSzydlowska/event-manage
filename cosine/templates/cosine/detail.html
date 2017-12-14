@@ -1,7 +1,6 @@
 {% extends 'base.html'%}
 {% block title %}Event details{% endblock %}
 {% block body %}
-
 <div class="well">
     <h1>{{ event.name }}</h1>
 </div>
@@ -11,29 +10,44 @@
         <tr>
             <th style="width: 40%;"><img src="{{ event.image.url }}" class="img-responsive"></th>
             <th class="text-left">
-                <h3>Date: {{ event.date }}</h3>
+                <h4>Date: {{ event.date }}</h4>
                 <h4>Spots: {{ event.spots }}</h4>
                 <h4>Location: {{ event.location }}</h4>
                 <h4>Price: {{ event.price }}</h4>
                 <h4>Enrollment begins: {{ event.enrollment_begin }}</h4>
                 <h4>Enrollment ends: {{ event.enrollment_end }}</h4>
                 <h4>Owner: {{ event.owner.username }}</h4>
+                {% if user == 'owner' %}
+                    <a href="{% url 'edit_event' event.id %}" class="btn btn-primary active" role="button">Edit event</a>
+                    <form action="{% url 'delete' event.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="event_id" value="{{ event.id }}"/>
+                        <button type="submit" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </form>
+                {% endif %}
             </th>
         </tr>
     </table>
 </div>
 
 <div class="well text-left">
+    <h4>Description:</h4>
     <p>{{ event.description }}</p>
 </div>
+{% if user == 'owner' or user == 'enrolled' %}
+    <div class="well text-left">
+        <h4>Participants:</h4>
+        <p>
+            {% for user in event.participants.all %}
+            <li>{{ user.username }}</li>
+            {% endfor %}
+        </p>
+    </div>
 
-<div class="well text-left">
-    <p>Participants:</p>
-    <p>
-        {% for user in event.participants.all %}
-        {{ user.username }}
-        {% endfor %}
-    </p>
-</div>
-
+    <div class="well text-left">
+        <h4>Reserve list:</h4>
+    </div>
+{% endif %}
 {% endblock %}

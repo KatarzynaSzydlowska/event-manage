@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 
 class Event(models.Model):
@@ -14,3 +15,9 @@ class Event(models.Model):
     enrollment_end = models.DateTimeField()
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="owner")
     participants = models.ManyToManyField(settings.AUTH_USER_MODEL)
+
+    @property
+    def can_enroll(self):
+        if self.enrollment_end > timezone.now() > self.enrollment_begin and self.participants.count() < self.spots:
+            return True
+        return False

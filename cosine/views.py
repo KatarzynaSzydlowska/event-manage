@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden
+from django.core.mail import send_mail
 
 
 def register(request):
@@ -118,3 +119,18 @@ def delete(request, event_id):
         return redirect('event_list_owned')
     else:
         return HttpResponseForbidden("Only owner can delete an event!")
+
+@login_required
+def send_info(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    if request.user.id == event.owner.id:
+        send_mail(
+        'information about '+event.name,
+        'Good Morning',
+        'from@example.com',
+        ['kasperski.dominik@gmail.com'],
+        fail_silently=False,
+        )
+        return redirect('detail', event_id=event.id)
+    return HttpResponseForbidden("Only owner can send email with information to all participants!")
+

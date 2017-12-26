@@ -383,7 +383,7 @@ class FormTest(TestCase):
                      'enrollment_end': '2012-12-12 12:12:12',
                      }
         form = EventForm(post_dict)
-        self.assertTrue(!form.is_valid())
+        self.assertFalse(form.is_valid())
 
     def test_event_form_proper_number_of_spots(self):
         post_dict = {'name': 'event1',
@@ -396,4 +396,4 @@ class FormTest(TestCase):
                      'enrollment_end': '2012-12-12 12:12:12',
                      }
         form = EventForm(post_dict)
-        self.assertTrue(!form.is_valid())
+        self.assertFalse(form.is_valid())

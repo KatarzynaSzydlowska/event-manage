@@ -7,11 +7,9 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden
-from django.core.mail import send_mail
 
-import sendgrid
-import os
-from sendgrid.helpers.mail import *
+import mailing_engine
+
 
 def register(request):
     if request.method == 'POST':
@@ -127,15 +125,7 @@ def delete(request, event_id):
 def send_info(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     if request.user.id == event.owner.id:
-        sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-        from_email = Email("kasperski.dominik@gmail.com")
-        to_email = Email("kasperski.dominik@gmail.com")
-        subject = "Sending with SendGrid is Fun"
-        content = Content("text/plain", "and easy to do anywhere, even with Python")
-        mail = Mail(from_email, subject, to_email, content)
-        response = sg.client.mail.send.post(request_body=mail.get())
-        print(response.body)
-        print(response.headers)
+        send_mail('TEST', 'IT WORKS', 'kasperski.dominik@gmail.com', ['kasperski.dominik@gmail.com'], fail_silently=False)
         return redirect('detail', event_id=event.id)
     return HttpResponseForbidden("Only owner can send email with information to all participants!")
 

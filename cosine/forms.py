@@ -3,6 +3,8 @@ from django import forms
 from .models import Event
 from django.contrib.admin.widgets import AdminDateWidget
 import datetime
+from django_google_maps import widgets as map_widgets
+from django_google_maps import fields as map_fields
 
 
 class LoginForm(forms.Form):
@@ -34,7 +36,7 @@ class EventForm(forms.ModelForm):
     date = forms.DateTimeField(widget=forms.widgets.DateInput(attrs={'class': 'datetimepicker'}))
     description = forms.CharField(widget=forms.Textarea)
     spots = forms.IntegerField()
-    location = forms.CharField()  # TODO,  change to some location framework
+    location = forms.CharField(widget=map_widgets)
     price = forms.FloatField()
     enrollment_begin = forms.DateTimeField(widget=forms.widgets.DateInput(attrs={'class': 'datetimepicker'}))
     enrollment_end = forms.DateTimeField(widget=forms.widgets.DateInput(attrs={'class': 'datetimepicker'}))

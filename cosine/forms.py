@@ -36,7 +36,7 @@ class EventForm(forms.ModelForm):
     date = forms.DateTimeField(widget=forms.widgets.DateInput(attrs={'class': 'datetimepicker'}))
     description = forms.CharField(widget=forms.Textarea)
     spots = forms.IntegerField()
-    location = forms.CharField(widget=map_widgets)
+    location = map_fields.AddressField()
     price = forms.FloatField()
     enrollment_begin = forms.DateTimeField(widget=forms.widgets.DateInput(attrs={'class': 'datetimepicker'}))
     enrollment_end = forms.DateTimeField(widget=forms.widgets.DateInput(attrs={'class': 'datetimepicker'}))

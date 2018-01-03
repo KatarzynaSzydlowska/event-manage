@@ -7,6 +7,7 @@ from cosine.forms import LoginForm, RegistrationForm, EventForm
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 
+
 class TestSetup(TestCase):
     def setUp(self):
         self.user_1 = User.objects.create_user("test_user", password='12345')
@@ -14,13 +15,15 @@ class TestSetup(TestCase):
         self.user_1.save()
         self.event = Event.objects.create(name="test", date=timezone.now(), description="test event", spots=10,
                                           price=100,
-                                          enrollment_begin=timezone.now(), enrollment_end=timezone.now(),
+                                          enrollment_begin=timezone.now(),
+                                          enrollment_end=timezone.now()+ timezone.timedelta(minutes=100),
                                           owner=self.user_1)
         self.event.participants.add(self.user_1, self.user_2)
         self.event.save()
         self.event2 = Event.objects.create(name="test", date=timezone.now(), description="test event", spots=10,
                                            price=100,
-                                           enrollment_begin=timezone.now(), enrollment_end=timezone.now(),
+                                           enrollment_begin=timezone.now(),
+                                           enrollment_end=timezone.now() - timezone.timedelta(minutes=100),
                                            owner=self.user_2)
         self.event2.save()
         self.user3 = User.objects.create_user(username='user1',
@@ -51,13 +54,13 @@ class ViewTestCase(TestSetup):
         self.client.login(username='test_user', password='12345')
         response = self.client.get(reverse('detail', kwargs={'event_id': self.event.id}))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'cosine/owner_detail.html')
+        self.assertTemplateUsed(response, 'cosine/detail.html')
 
     def test_call_detail_loads_if_enrolled_user(self):
         self.client.login(username='test_user_2', password='12345')
         response = self.client.get(reverse('detail', kwargs={'event_id': self.event.id}))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'cosine/user_detail.html')
+        self.assertTemplateUsed(response, 'cosine/detail.html')
 
     def test_call_detail_loads_if_not_enrolled_user(self):
         self.client.login(username='user1', password='12345')
@@ -135,12 +138,12 @@ class ViewTestCase(TestSetup):
     def test_add_event_form_loads_correctly_for_logged_in_user(self):
         self.client.login(username='user1', password='12345')
         response = self.client.get('/add-event', follow=True)
-        self.assertTemplateUsed(response, 'cosine/add_event.html')
+        self.assertTemplateUsed(response, 'cosine/add_edit_event.html')
 
     def test_edit_event_form_loads_correctly_for_event_owner(self):
         self.client.login(username='test_user', password='12345')
         response = self.client.get(reverse('edit_event', kwargs={'event_id': 1}), follow=True)
-        self.assertTemplateUsed(response, 'cosine/edit_event.html')
+        self.assertTemplateUsed(response, 'cosine/add_edit_event.html')
 
     def test_edit_event_form_loads_correctly_for_not_event_owner(self):
         self.client.login(username='test_user_2', password='12345')
@@ -164,7 +167,7 @@ class ViewTestCase(TestSetup):
                                                     'enrollment_begin': '2012-12-12 12:12:12',
                                                     'enrollment_end': '2012-12-12 12:12:12',
                                                     }, follow=True)
-        self.assertTemplateUsed(response, 'cosine/owner_detail.html')
+        self.assertTemplateUsed(response, 'cosine/detail.html')
 
     def test_add_event_view_if_failed(self):
         self.client.login(username='user1', password='12345')
@@ -178,7 +181,7 @@ class ViewTestCase(TestSetup):
                                                     'enrollment_begin': '2012-12-12 12:12:12',
                                                     'enrollment_end': '2012-12-12 12:12:12',
                                                     }, follow=True)
-        self.assertTemplateUsed(response, 'cosine/add_event.html')
+        self.assertTemplateUsed(response, 'cosine/add_edit_event.html')
 
     def test_add_event_view_if_succes_with_pic(self):
         self.client.login(username='user1', password='12345')
@@ -194,7 +197,7 @@ class ViewTestCase(TestSetup):
                          'enrollment_end': '2012-12-12 12:12:12',
                          }
             response = self.client.post('/add-event/', post_dict, follow=True)
-            self.assertTemplateUsed(response, 'cosine/owner_detail.html')
+            self.assertTemplateUsed(response, 'cosine/detail.html')
 
     def test_edit_event_view_if_succes_with_pic(self):
         self.client.login(username='test_user', password='12345')
@@ -210,7 +213,7 @@ class ViewTestCase(TestSetup):
                          'enrollment_end': '2012-12-12 12:12:12',
                          }
             response = self.client.post('/event/{}/edit-event/'.format(self.event.id), post_dict, follow=True)
-            self.assertTemplateUsed(response, 'cosine/owner_detail.html')
+            self.assertTemplateUsed(response, 'cosine/detail.html')
 
     def test_edit_event_view_if_owner(self):
         self.client.login(username='test_user', password='12345')
@@ -224,7 +227,7 @@ class ViewTestCase(TestSetup):
                                                                                     'enrollment_begin': '2012-12-12 12:12:12',
                                                                                     'enrollment_end': '2012-12-12 12:12:12',
                                                                                     }, follow=True)
-        self.assertTemplateUsed(response, 'cosine/owner_detail.html')
+        self.assertTemplateUsed(response, 'cosine/detail.html')
 
     def test_edit_event_view_if_not_owner(self):
         self.client.login(username='test_user_2', password='12345')
@@ -243,7 +246,7 @@ class ViewTestCase(TestSetup):
     def test_edit_event_view_get_request_if_owner(self):
         self.client.login(username='test_user', password='12345')
         response = self.client.get('/event/1/edit-event/', follow=True)
-        self.assertTemplateUsed(response, 'cosine/edit_event.html')
+        self.assertTemplateUsed(response, 'cosine/add_edit_event.html')
 
     def test_edit_event_view_get_request_if_not_owner(self):
         self.client.login(username='test_user_2', password='12345')
@@ -268,12 +271,19 @@ class ViewTestCase(TestSetup):
         self.assertTemplateUsed(response, 'cosine/list.html')
         self.assertEqual(list(response.context['events']), [self.event])
 
-    def test_enroll_view(self):
+    def test_enroll_view_when_can(self):
         user = User.objects.create_user("test_user_3", password='12345')
         self.client.login(username='test_user_3', password='12345')
         response = self.client.get(reverse('enroll', kwargs={'event_id': self.event.id}), follow=True)
-        self.assertTemplateUsed(response, 'cosine/user_detail.html')
+        self.assertTemplateUsed(response, 'cosine/detail.html')
         self.assertTrue(user in self.event.participants.all())
+
+    def test_enroll_view_when_fail(self):
+        user = User.objects.create_user("test_user_3", password='12345')
+        self.client.login(username='test_user_3', password='12345')
+        response = self.client.get(reverse('enroll', kwargs={'event_id': self.event2.id}), follow=True)
+        self.assertTemplateUsed(response, 'cosine/detail.html')
+        self.assertTrue(user not in self.event.participants.all())
 
     def test_leave_view(self):
         user = User.objects.create_user("test_user_3", password='12345')

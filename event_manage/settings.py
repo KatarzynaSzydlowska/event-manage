@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'cosine',
     # 'cosine.apps.CosineConfig',
     'django.contrib.admin',
+    'storages',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -120,11 +121,13 @@ ALLOWED_HOSTS = ['*']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-
+DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DROPBOX_OAUTH2_TOKEN = 'Iw54ITBN23AAAAAAAAAACQY6PqhuIqIYuuPK53l2h8CwKRR-g6GIUBP5pa1G7uQ4'
+DROPBOX_ROOT_PATH = '/mediaasdsa'
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/DUPA/'
 MEDIA_URL = '/media/'
 
 # Extra places for collectstatic to find static files.

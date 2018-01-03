@@ -8,8 +8,6 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden
 
-import mailing_engine
-
 
 def register(request):
     if request.method == 'POST':
@@ -121,11 +119,4 @@ def delete(request, event_id):
     else:
         return HttpResponseForbidden("Only owner can delete an event!")
 
-@login_required
-def send_info(request, event_id):
-    event = get_object_or_404(Event, pk=event_id)
-    if request.user.id == event.owner.id:
-        send_mail('TEST', 'IT WORKS', 'kasperski.dominik@gmail.com', ['kasperski.dominik@gmail.com'], fail_silently=False)
-        return redirect('detail', event_id=event.id)
-    return HttpResponseForbidden("Only owner can send email with information to all participants!")
 

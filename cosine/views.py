@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden
-
+import datetime
 
 def register(request):
     if request.method == 'POST':
@@ -26,53 +26,51 @@ def register(request):
 def dashboard(request):
     return render(request, 'cosine/dashboard.html', {'section': 'dashboard'})
 
-
 @login_required
 def add_event(request):
     if request.method == 'POST':
         event_form = EventForm(request.POST, request.FILES or None)
         if event_form.is_valid():
-            new_event = event_form.save(commit=False)
+            event = event_form.save(commit=False)
             if 'image' in request.FILES:
-                new_event.image = request.FILES['image']
-            new_event.owner = User.objects.get(id=request.user.id)
-            new_event.save()
-            return redirect('detail', event_id=new_event.id)
+                event.image = request.FILES['image']
+            event.owner = User.objects.get(id=request.user.id)
+            event.save()
+            return redirect('detail', event_id=event.id)
     else:
         event_form = EventForm()
-    return render(request, 'cosine/add_event.html', {'event_form': event_form})
+    return render(request, 'cosine/add_edit_event.html', {'event_form': event_form,'add_edit':"add"})
 
 
 @login_required
 def edit_event(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
-    if request.user.id == event.owner.id:
-        if request.method == 'POST':
-            event_form = EventForm(request.POST, request.FILES or None, instance=event)
-            if event_form.is_valid():
-                event = event_form.save(commit=False)
-                if 'image' in request.FILES:
-                    event.image = request.FILES['image']
-                event.owner = User.objects.get(id=request.user.id)
-                event.save()
-                return redirect('detail', event_id=event.id)
-        else:
-            event_form = EventForm(instance=event)
-        return render(request, 'cosine/edit_event.html', {'event_form': event_form})
-    return HttpResponseForbidden("Only owner can edit an event!")
+    if request.user.id != event.owner.id:
+        return HttpResponseForbidden("Only owner can edit an event!")
+    if request.method == 'POST':
+        event_form = EventForm(request.POST, request.FILES or None,instance=event)
+        if event_form.is_valid():
+            event = event_form.save(commit=False)
+            if 'image' in request.FILES:
+                event.image = request.FILES['image']
+            event.owner = User.objects.get(id=request.user.id)
+            event.save()
+            return redirect('detail', event_id=event.id)
+    else:
+        event_form = EventForm(instance=event)
+    return render(request, 'cosine/add_edit_event.html', {'event_form': event_form,'add_edit':"edit"})
 
 
 @login_required
 def detail(request, event_id):
-    context = {'event': get_object_or_404(Event, pk=event_id)}
     event = get_object_or_404(Event, pk=event_id)
     if request.user.id == event.owner.id:
-        return render(request, 'cosine/owner_detail.html', context)
+        user = 'owner'
     elif request.user in event.participants.all():
-        return render(request, 'cosine/user_detail.html', context)
+        user = 'enrolled'
     else:
-        return render(request, 'cosine/detail.html', context)
-
+        user = 'not_enrolled'
+    return render(request, 'cosine/detail.html', {'event': event,'user':user})
 
 @login_required
 def event_list_owned(request):
@@ -97,8 +95,9 @@ def event_list_available(request):
 @login_required
 def enroll(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
-    event.participants.add(request.user)
-    event.save()
+    if event.can_enroll:
+        event.participants.add(request.user)
+        event.save()
     return redirect('detail', event_id=event_id)
 
 

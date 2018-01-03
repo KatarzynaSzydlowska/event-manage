@@ -1,5 +1,6 @@
 [run]
 omit =
+    event_manage/settings_heroku.py
     event_manage/settings.py
     event_manage/urls.py
     event_manage/wsgi.py

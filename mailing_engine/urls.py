@@ -3,5 +3,5 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-    url(r'^event/(?P<event_id>[0-9]+)/$', views.send_info, name='send_info'),
+    url(r'^event/(?P<event_id>[0-9]+)/$/send_info.html', views.send_info, name='send_info'),
 ]

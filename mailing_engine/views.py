@@ -18,5 +18,5 @@ def send_info(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     if request.user.id == event.owner.id:
         send_mail('TEST', 'IT WORKS', 'kasperski.dominik@gmail.com', ['kasperski.dominik@gmail.com'], fail_silently=False)
-        return redirect('detail', event_id=event.id)
+        return render(request, 'mailing_engine/send_info.html', {'event': event,'user':user})
     return HttpResponseForbidden("Only owner can send email with information to all participants!")

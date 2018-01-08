@@ -381,3 +381,29 @@ class FormTest(TestCase):
                      }
         form = EventForm(post_dict)
         self.assertTrue(form.is_valid())
+
+    def test_event_form_proper_price(self):
+        post_dict = {'name': 'event1',
+                     'date': '2012-12-12 12:12:12',
+                     'description': 'test',
+                     'spots': '1',
+                     'location': 'test',
+                     'price': '-12345',
+                     'enrollment_begin': '2012-12-12 12:12:12',
+                     'enrollment_end': '2012-12-12 12:12:12',
+                     }
+        form = EventForm(post_dict)
+        self.assertFalse(form.is_valid())
+
+    def test_event_form_proper_number_of_spots(self):
+        post_dict = {'name': 'event1',
+                     'date': '2012-12-12 12:12:12',
+                     'description': 'test',
+                     'spots': '-1',
+                     'location': 'test',
+                     'price': '12345',
+                     'enrollment_begin': '2012-12-12 12:12:12',
+                     'enrollment_end': '2012-12-12 12:12:12',
+                     }
+        form = EventForm(post_dict)
+        self.assertFalse(form.is_valid())

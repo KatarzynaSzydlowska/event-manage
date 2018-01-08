@@ -24,12 +24,12 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = "(+lrm8zw2*akt%svuyll*b92z135u#r^a1l)o!$)^_=-#kdpw#"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
+
 # Application definition
 
 INSTALLED_APPS = [
     'cosine',
-    'mailing_engine',
     # 'cosine.apps.CosineConfig',
     'django.contrib.admin',
     'storages',
@@ -105,7 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'CET'
+TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -117,14 +117,17 @@ DATABASES['default'].update(dj_database_url.config(conn_max_age=500))
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Allow all host headers
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['*']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
+DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DROPBOX_OAUTH2_TOKEN = 'Iw54ITBN23AAAAAAAAAACQY6PqhuIqIYuuPK53l2h8CwKRR-g6GIUBP5pa1G7uQ4'
+DROPBOX_ROOT_PATH = '/media'
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/media/'
 MEDIA_URL = '/media/'
 
 # Extra places for collectstatic to find static files.
@@ -140,11 +143,3 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 LOGIN_REDIRECT_URL = reverse_lazy('dashboard')
 LOGIN_URL = reverse_lazy('login')
 LOGOUT_URL = reverse_lazy('logout')
-
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# EMAIL_FILE_PATH = 'tmp/email-messages/'
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'dodek08'
-EMAIL_HOST_PASSWORD = 'pite1234'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True

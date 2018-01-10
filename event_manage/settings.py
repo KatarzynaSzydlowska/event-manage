@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     'mailing_engine',
     # 'cosine.apps.CosineConfig',
     'django.contrib.admin',
-    #'storages',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

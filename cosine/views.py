@@ -1,5 +1,5 @@
 from .models import Event
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib.auth import authenticate, login
 from django.views.generic import View
 from .forms import LoginForm, RegistrationForm, EventForm
@@ -36,6 +36,7 @@ def add_event(request):
                 event.image = request.FILES['image']
             event.owner = User.objects.get(id=request.user.id)
             event.save()
+            event.generate_qrcode(request.build_absolute_uri(reverse('detail', kwargs={'event_id': event.id})))
             return redirect('detail', event_id=event.id)
     else:
         event_form = EventForm()

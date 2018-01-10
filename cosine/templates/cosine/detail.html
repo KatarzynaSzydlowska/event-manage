@@ -50,4 +50,8 @@
         <h4>Reserve list:</h4>
     </div>
 {% endif %}
+<div class="well text-left">
+    <h4>QR-Code-Link:</h4>
+    <img src="{{ event.qr_code.url }}" class="img-responsive">
+</div>
 {% endblock %}

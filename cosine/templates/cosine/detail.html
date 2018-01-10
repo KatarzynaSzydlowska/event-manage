@@ -29,7 +29,7 @@
                     </form>
                 {% endif %}
                 {% if user == 'enrolled' %}
-                    <a href="{% url 'mailing_engine:send_info_participant' event.id  %}" class="btn btn-primary active" role="button">send info</a>
+                    <a href="{% url 'mailing_engine:send_info' event.id  %}" class="btn btn-primary active" role="button">send info</a>
                 {% endif %}
             </th>
         </tr>

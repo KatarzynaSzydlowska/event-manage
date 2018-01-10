@@ -58,7 +58,7 @@ def edit_event(request, event_id):
             return redirect('detail', event_id=event.id)
     else:
         event_form = EventForm(instance=event)
-    return render(request, 'cosine/add_edit_event.html', {'event_form': event_form,'add_edit':"edit"})
+    return render(request, 'cosine/add_edit_event.html', {'event_form': event_form,'add_edit':'edit'})
 
 
 @login_required

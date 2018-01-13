@@ -45,3 +45,14 @@ class Event(models.Model):
         filebuffer = InMemoryUploadedFile(
             buffer, None, filename, 'image/png', buffer.seek(0, os.SEEK_END), None)
         self.qr_code.save(filename, filebuffer)
+
+class Comment(models.Model):
+	event = models.ForeignKey(Event, related_name='comments')
+	name = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="name")
+	body = models.TextField()
+	created = models.DateTimeField(auto_now_add=True)
+	updated = models.DateTimeField(auto_now=True)
+	active = models.BooleanField(default=True)
+
+	class Meta:
+		ordering = ('created',)

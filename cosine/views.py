@@ -2,7 +2,7 @@ from .models import Event
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib.auth import authenticate, login
 from django.views.generic import View
-from .forms import LoginForm, RegistrationForm, EventForm
+from .forms import LoginForm, RegistrationForm, EventForm, CommentForm
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
@@ -65,13 +65,26 @@ def edit_event(request, event_id):
 @login_required
 def detail(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
+    comments = event.comments.filter(active=True)
+
     if request.user.id == event.owner.id:
         user = 'owner'
     elif request.user in event.participants.all():
         user = 'enrolled'
     else:
         user = 'not_enrolled'
-    return render(request, 'cosine/detail.html', {'event': event,'user':user})
+
+    if request.method == 'POST':
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.event = event
+            new_comment.name = User.objects.get(username=request.user.username)
+            new_comment.save()
+            return redirect('detail', event_id=event.id)
+    else:
+        comment_form = CommentForm()
+    return render(request, 'cosine/detail.html', {'event': event,'user': user, 'comments': comments, 'comment_form': comment_form})
 
 @login_required
 def event_list_owned(request):

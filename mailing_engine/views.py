@@ -61,9 +61,7 @@ def send_info(request, event_id):
         "Owner's email address:\t" + event.owner.email + " \n " +\
         "Thank You for using COSINE!"
         message = EmailMessage(subject, body, from_email=event.owner.email, bcc=bcc_participants)
-        file_path = 'media/qrcodes/events-'+str(event.id)+'.png'
-        print(bcc_participants)
-        message.attach_file(file_path)
+        message.attach("QR", event.qr_code.read())
         message.send()
         return render(request, 'mailing_engine/send_info.html', {'event': event,'user':request.user})
     return HttpResponseForbidden("Only owner can send email with information to all participants!")
@@ -86,9 +84,7 @@ def send_message(request, event_id):
                 "Owner's email address:\t" + event.owner.email + " \n " +\
                 "Thank You for using COSINE"
                 message = EmailMessage(subject, body, from_email=event.owner.email, bcc=bcc_participants)
-                file_path = 'media/qrcodes/events-'+str(event.id)+'.png'
-                print(bcc_participants)
-                message.attach_file(file_path)
+                message.attach("QR", event.qr_code.read())
                 message.send()                
                 return redirect(request, 'mailing_engine/send_info.html', {'event': event,'user':request.user})
     return render(request, 'mailing_engine/send_message.html', {'mail_form': form})

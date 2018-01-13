@@ -31,6 +31,7 @@ DEBUG = True
 INSTALLED_APPS = [
     'cosine',
     # 'cosine.apps.CosineConfig',
+    'mailing_engine',
     'django.contrib.admin',
     'storages',
     'django.contrib.auth',
@@ -143,3 +144,11 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 LOGIN_REDIRECT_URL = reverse_lazy('dashboard')
 LOGIN_URL = reverse_lazy('login')
 LOGOUT_URL = reverse_lazy('logout')
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_FILE_PATH = 'tmp/email-messages/'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'dodek08'
+EMAIL_HOST_PASSWORD = 'pite1234'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

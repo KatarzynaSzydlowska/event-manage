@@ -3,7 +3,7 @@ from cosine.models import Event
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.shortcuts import reverse
-from cosine.forms import LoginForm, RegistrationForm, EventForm
+from cosine.forms import LoginForm, RegistrationForm, EventForm, CommentForm
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 
@@ -314,6 +314,11 @@ class ViewTestCase(TestSetup):
         response = self.client.post(reverse('delete', kwargs={'event_id': event.id}), follow=True)
         self.assertEqual(response.status_code, 403)
 
+    def test_comment_add(self):
+        self.client.login(username='user1', password='12345')
+        response = self.client.post('/event/1/', {'body': 'cos tam'})
+        self.assertEqual(response.status_code, 302)
+
 
 class FormTest(TestCase):
     def test_login_form_validation(self):
@@ -406,4 +411,14 @@ class FormTest(TestCase):
                      'enrollment_end': '2012-12-12 12:12:12',
                      }
         form = EventForm(post_dict)
+        self.assertFalse(form.is_valid())
+
+    def test_comment_form_while_valid(self):
+        comment_dict = {'body': 'cos tam'}
+        form = CommentForm(comment_dict)
+        self.assertTrue(form.is_valid())
+
+    def test_comment_form_while_not_valid(self):
+        comment_dict = {'body': ''}
+        form = CommentForm(comment_dict)
         self.assertFalse(form.is_valid())

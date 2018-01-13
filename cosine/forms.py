@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django import forms
-from .models import Event
+from .models import Event, Comment
 from django.contrib.admin.widgets import AdminDateWidget
 import datetime
 
@@ -55,3 +55,8 @@ class EventForm(forms.ModelForm):
         if cd['price']<0:
             raise forms.ValidationError("Price should be at least 0!")
         return cd['price']
+
+class CommentForm(forms.ModelForm):
+	class Meta:
+		model = Comment
+		fields = ['body',]

@@ -37,7 +37,8 @@ def send_info(request, event_id):
         "Owner's email address:\t" + event.owner.email + " \n " +\
         "Thank You for using COSINE!"
         message = EmailMessage(subject=msubject, body=mbody, from_email=event.owner.email, bcc=[request.user.email])
-        print(event.qr_code)
+        print(event.qr_code.file)
+        print(type(event.qr_code.file))
         file, metadata = event.qr_code.file
 
         message.attach("QR.png", file.read())

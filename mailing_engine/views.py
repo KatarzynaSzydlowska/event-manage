@@ -39,9 +39,9 @@ def send_info(request, event_id):
         message = EmailMessage(subject=msubject, body=mbody, from_email=event.owner.email, bcc=[request.user.email])
         print(event.qr_code.file)
         print(type(event.qr_code.file))
-        file, metadata = event.qr_code.file
-
-        message.attach("QR.png", file.read())
+        for a in event.qr_code.file:
+            print(a)
+        message.attach("QR.png", event.qr_code.file.read())
         message.send()
         return render(request, 'mailing_engine/send_info.html', {'event': event,'user':request.user})
 

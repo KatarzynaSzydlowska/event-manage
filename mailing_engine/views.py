@@ -76,7 +76,9 @@ def send_message(request, event_id):
             form = ContactForm()
         else:
             form = ContactForm(request.POST)
+            print("----------- before validation")
             if form.is_valid():
+                print("----------- before validation")
                 msubject = form.cleaned_data['subject']
                 mbody = form.cleaned_data['message']
                 bcc_participants = [part.email for part in event.participants.all()]
@@ -89,6 +91,7 @@ def send_message(request, event_id):
                 message = EmailMessage(subject=msubject, body=mbody, from_email=event.owner.email, bcc=bcc_participants)
                 response = event.qr_code.file._storage.client.files_download(event.qr_code.file.name)
                 message.attach("QR.png", response[1].content)
-                message.send()                
+                message.send()
+                print("----------- sent")
                 return redirect(request, 'mailing_engine/send_info.html', {'event': event,'user':request.user})
         return render(request, 'mailing_engine/send_message.html', {'mail_form': form})

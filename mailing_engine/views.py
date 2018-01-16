@@ -38,8 +38,6 @@ def send_info(request, event_id):
         "Thank You for using COSINE!"
         message = EmailMessage(subject=msubject, body=mbody, from_email=event.owner.email, bcc=[request.user.email])
 
-        # event.qr_code.file._storage.client.files_download_to_file("tmp_file",event.qr_code.file.name)
-        # f=open("tmp_file",'rb')
         response = event.qr_code.file._storage.client.files_download(event.qr_code.file.name)
         message.attach("QR.png", response[1].content)
         message.send()
@@ -64,10 +62,8 @@ def send_info(request, event_id):
         "Owner's email address:\t" + event.owner.email + " \n " +\
         "Thank You for using COSINE!"
         message = EmailMessage(subject=msubject, body=mbody, from_email=event.owner.email, bcc=bcc_participants)
-        print(event.qr_code)
-        file, metadata = event.qr_code
-        print(event.qr_code)
-        message.attach("QR.png", event.qr_code.file.read())
+        response = event.qr_code.file._storage.client.files_download(event.qr_code.file.name)
+        message.attach("QR.png", response[1].content)
         message.send()
         return render(request, 'mailing_engine/send_info.html', {'event': event,'user':request.user})
     return HttpResponseForbidden("Only owner can send email with information to all participants!")
@@ -91,7 +87,8 @@ def send_message(request, event_id):
                 "Thank You for using COSINE"
                 print(type(mbody))
                 message = EmailMessage(subject=msubject, body=mbody, from_email=event.owner.email, bcc=bcc_participants)
-                message.attach("QR.png", event.qr_code.file.read())
+                response = event.qr_code.file._storage.client.files_download(event.qr_code.file.name)
+                message.attach("QR.png", response[1].content)
                 message.send()                
                 return redirect(request, 'mailing_engine/send_info.html', {'event': event,'user':request.user})
         return render(request, 'mailing_engine/send_message.html', {'mail_form': form})

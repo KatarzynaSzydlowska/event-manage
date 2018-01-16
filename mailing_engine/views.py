@@ -36,9 +36,8 @@ def send_info(request, event_id):
         "Link to an event in COSINE:\t" + 'http://event-manage-pite.herokuapp.com/event/'+str(event.id) + " \n " +\
         "Owner's email address:\t" + event.owner.email + " \n " +\
         "Thank You for using COSINE!"
-
         message = EmailMessage(subject=msubject, body=mbody, from_email=event.owner.email, bcc=[request.user.email])
-        message.attach_file(event.qr_code.name)
+        message.attach("QR.png", event.qr_code)
         message.send()
         return render(request, 'mailing_engine/send_info.html', {'event': event,'user':request.user})
 
@@ -61,7 +60,7 @@ def send_info(request, event_id):
         "Owner's email address:\t" + event.owner.email + " \n " +\
         "Thank You for using COSINE!"
         message = EmailMessage(subject=msubject, body=mbody, from_email=event.owner.email, bcc=bcc_participants)
-        message.attach_file(event.qr_code.name)
+        message.attach("QR.png", event.qr_code)
         message.send()
         return render(request, 'mailing_engine/send_info.html', {'event': event,'user':request.user})
     return HttpResponseForbidden("Only owner can send email with information to all participants!")
@@ -85,7 +84,7 @@ def send_message(request, event_id):
                 "Thank You for using COSINE"
                 print(type(mbody))
                 message = EmailMessage(subject=msubject, body=mbody, from_email=event.owner.email, bcc=bcc_participants)
-                message.attach_file(event.qr_code.name)
+                message.attach("QR.png", event.qr_code)
                 message.send()                
                 return redirect(request, 'mailing_engine/send_info.html', {'event': event,'user':request.user})
         return render(request, 'mailing_engine/send_message.html', {'mail_form': form})

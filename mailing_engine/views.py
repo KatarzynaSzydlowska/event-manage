@@ -84,7 +84,9 @@ def send_message(request, event_id):
                 "Thank You for using COSINE"
                 print(type(mbody))
                 message = EmailMessage(subject=msubject, body=mbody, from_email=event.owner.email, bcc=bcc_participants)
-                message.attach("QR.png", event.qr_code.read())
+                file, metadata = event.qr_code
+                print( event.qr_code)
+                message.attach("QR.png", file.read())
                 message.send()                
                 return redirect(request, 'mailing_engine/send_info.html', {'event': event,'user':request.user})
         return render(request, 'mailing_engine/send_message.html', {'mail_form': form})

@@ -19,7 +19,7 @@
                 <h4>Owner: {{ event.owner.username }}</h4>
                 {% if user == 'owner' %}
                     <a href="{% url 'edit_event' event.id %}" class="btn btn-primary active" role="button">Edit event</a>
-                    <a href="{% url 'mailing_engine:send_info' event.id  %}" class="btn btn-primary active" role="button">Send info</a>
+                    <a href="{% url 'mailing_engine:send_info' event.id  %}" class="btn btn-primary active" role="button">Send info to all</a>
                     <a href="{% url 'mailing_engine:send_message' event.id  %}" class="btn btn-primary active" role="button">Send message</a>
                     <form action="{% url 'delete' event.id %}" method="post" style="display: inline;">
                         {% csrf_token %}
@@ -30,7 +30,7 @@
                     </form>
                 {% endif %}
                 {% if user == 'enrolled' %}
-                    <a href="{% url 'mailing_engine:send_info' event.id  %}" class="btn btn-primary active" role="button">send info</a>
+                    <a href="{% url 'mailing_engine:send_info' event.id  %}" class="btn btn-primary active" role="button">Send me info</a>
                 {% endif %}
             </th>
         </tr>

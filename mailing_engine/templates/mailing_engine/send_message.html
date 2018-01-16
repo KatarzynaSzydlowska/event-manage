@@ -2,8 +2,8 @@
 {% block title %}Send message to participants{% endblock %}
 {% block body %}
 <h1>What do You want to say?</h1>
-<p>Fill out the form, message would be sent to all participants:</p>
-<form action="." method="post">
+<p>This message would be sent to all participants:</p>
+<form method="post">
     <table>
         {{ mail_form.as_table }}
     </table>

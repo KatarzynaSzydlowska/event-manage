@@ -72,7 +72,7 @@ def send_info(request, event_id):
 def send_message(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     if request.user.id == event.owner.id:
-        if request.method != 'POST':
+        if request.method == 'GET':
             form = ContactForm()
         else:
             form = ContactForm(request.POST)
@@ -93,5 +93,5 @@ def send_message(request, event_id):
                 message.attach("QR.png", response[1].content)
                 message.send()
                 print("----------- sent")
-                return redirect(request, 'mailing_engine/send_info.html', {'event': event,'user':request.user})
+                return render(request, 'mailing_engine/send_info.html', {'event': event,'user':request.user})
         return render(request, 'mailing_engine/send_message.html', {'mail_form': form})

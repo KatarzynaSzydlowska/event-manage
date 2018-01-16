@@ -41,7 +41,7 @@ def send_info(request, event_id):
         # event.qr_code.file._storage.client.files_download_to_file("tmp_file",event.qr_code.file.name)
         # f=open("tmp_file",'rb')
         response = event.qr_code.file._storage.client.files_download(event.qr_code.file.name)
-        message.attach("QR.png", response.conent)
+        message.attach("QR.png", response[1].content)
         message.send()
         return render(request, 'mailing_engine/send_info.html', {'event': event,'user':request.user})
 

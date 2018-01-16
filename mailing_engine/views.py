@@ -72,7 +72,7 @@ def send_info(request, event_id):
 def send_message(request, event_id):
     event = get_object_or_404(Event, pk=event_id)
     if request.user.id == event.owner.id:
-        if request.method == 'POST':
+        if request.method != 'POST':
             form = ContactForm()
         else:
             form = ContactForm(request.POST)

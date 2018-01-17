@@ -1,15 +1,31 @@
 {% extends "base.html" %}
 {% block title %}Create account{% endblock %}
 {% block body %}
+
+<style>
+    .btn {
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+    }
+
+    .btn:hover {
+        background-color: #e7e7e7;
+        color: black;
+    }
+
+</style>
+
+
 <h1>Create account</h1>
 <p>Fill out the form to register:</p>
-<form action="." method="post">
-    <table>
-        {{ user_form.as_table }}
-    </table>
-    {% csrf_token %}
-    <p>
-        <button type="submit" class="btn btn-primary active">Create account</button>
-    </p>
-</form>
+    <form action="." method="post">
+        <table align="center" display="inline-block">
+            {{ user_form.as_table }}
+        </table>
+        {% csrf_token %}
+        <p>
+            <button type="submit" class="btn">Create account</button>
+        </p>
+    </form>
 {% endblock %}

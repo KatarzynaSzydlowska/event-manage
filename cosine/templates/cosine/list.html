@@ -1,13 +1,21 @@
 {% extends 'base.html'%}
 {% block title %}Event List{% endblock %}
 {% block body %}
+
 <style>
     .btn {
         background-color: #4CAF50;
         color: #fff;
         border: none;
     }
+
+    .btn:hover {
+        background-color: #e7e7e7;
+        color: black;
+    }
+
 </style>
+
 <div class="events-container container-fluid">
     <div class="row">
         <div class="col-sm-12">
@@ -21,7 +29,7 @@
             </a>
             <div class="desc">
                 <h2 class="h2_list">{{ event.name }}</h2>
-                <a href="{% url 'detail' event.id %}" class="btn btn-primary btn-sm" role="button" class="btn">View Details</a>
+                <a href="{% url 'detail' event.id %}"role="button" class="btn">View Details</a>
                 {% if type == 'owned' %}
                 <form action="{% url 'delete' event.id %}" method="post" style="display: inline;">
                     {% csrf_token %}
@@ -31,9 +39,9 @@
                     </button>
                 </form>
                 {% elif type == 'available' and event.can_enroll%}
-                <a href="{% url 'enroll' event.id %}" class="btn btn-primary btn-sm" role="button" class="btn">Enroll</a>
+                <a href="{% url 'enroll' event.id %}" role="button" class="btn">Enroll</a>
                 {% elif type == 'enrolled' %}
-                <a href="{% url 'leave' event.id %}" class="btn btn-primary btn-sm" role="button" class="btn">Leave</a>
+                <a href="{% url 'leave' event.id %}" role="button" class="btn">Leave</a>
                 {% endif %}
             </div>
         </div>

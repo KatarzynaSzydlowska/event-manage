@@ -194,7 +194,7 @@ class ViewTestCase(TestSetup):
                          'location': 'test',
                          'price': '12345',
                          'enrollment_begin': '2018-12-13 12:12:12',
-                         'enrollment_end': '2018-14-12 12:12:12',
+                         'enrollment_end': '2018-12-14 12:12:12',
                          }
             response = self.client.post('/add-event/', post_dict, follow=True)
             self.assertTemplateUsed(response, 'cosine/detail.html')
@@ -210,7 +210,7 @@ class ViewTestCase(TestSetup):
                          'location': 'test',
                          'price': '12345',
                          'enrollment_begin': '2018-12-13 12:12:12',
-                         'enrollment_end': '2018-14-12 12:12:12',
+                         'enrollment_end': '2018-12-14 12:12:12',
                          }
             response = self.client.post('/event/{}/edit-event/'.format(self.event.id), post_dict, follow=True)
             self.assertTemplateUsed(response, 'cosine/detail.html')
@@ -225,7 +225,7 @@ class ViewTestCase(TestSetup):
                                                                                     'location': 'test',
                                                                                     'price': '12345',
                                                                                     'enrollment_begin': '2018-12-13 12:12:12',
-                                                                                    'enrollment_end': '2018-14-12 12:12:12',
+                                                                                    'enrollment_end': '2018-12-14 12:12:12',
                                                                                     }, follow=True)
         self.assertTemplateUsed(response, 'cosine/detail.html')
 
@@ -239,7 +239,7 @@ class ViewTestCase(TestSetup):
                                                              'location': 'test',
                                                              'price': '12345',
                                                              'enrollment_begin': '2018-12-13 12:12:12',
-                                                             'enrollment_end': '2018-14-12 12:12:12',
+                                                             'enrollment_end': '2018-12-14 12:12:12',
                                                              }, follow=True)
         self.assertEqual(response.status_code, 403)
 

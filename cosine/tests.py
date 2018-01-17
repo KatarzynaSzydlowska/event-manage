@@ -235,7 +235,7 @@ class ViewTestCase(TestSetup):
                                                     'location': 'test',
                                                     'price': '12345',
                                                     'enrollment_begin': '2018-12-16 12:12:12',
-                                                    'enrollment_end': '2018-12-13 11:12:12',
+                                                    'enrollment_end': '2018-12-16 13:12:12',
                                                     }, follow=True)
         self.assertTemplateUsed(response, 'cosine/add_edit_event.html')
 

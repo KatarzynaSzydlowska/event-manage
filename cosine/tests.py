@@ -159,13 +159,13 @@ class ViewTestCase(TestSetup):
         self.client.login(username='user1', password='12345')
 
         response = self.client.post('/add-event/', {'name': 'event1',
-                                                    'date': '2012-12-12 12:12:12',
+                                                    'date': '2018-12-15 12:12:12',
                                                     'description': 'test',
                                                     'spots': '1',
                                                     'location': 'test',
                                                     'price': '12345',
-                                                    'enrollment_begin': '2012-12-12 12:12:12',
-                                                    'enrollment_end': '2012-12-12 12:12:12',
+                                                    'enrollment_begin': '2018-12-13 12:12:12',
+                                                    'enrollment_end': '2018-12-14 12:12:12',
                                                     }, follow=True)
         self.assertTemplateUsed(response, 'cosine/detail.html')
 
@@ -173,13 +173,13 @@ class ViewTestCase(TestSetup):
         self.client.login(username='user1', password='12345')
 
         response = self.client.post('/add-event/', {'name': 'event1',
-                                                    'date': '2012-12-12 12:12:12',
+                                                    'date': '2018-12-15 12:12:12',
                                                     'description': 'test',
                                                     'spots': 'as',
                                                     'location': 'test',
                                                     'price': '12345',
-                                                    'enrollment_begin': '2012-12-12 12:12:12',
-                                                    'enrollment_end': '2012-12-12 12:12:12',
+                                                    'enrollment_begin': '2018-12-13 12:12:12',
+                                                    'enrollment_end': '2018-12-14 12:12:12',
                                                     }, follow=True)
         self.assertTemplateUsed(response, 'cosine/add_edit_event.html')
 
@@ -187,14 +187,14 @@ class ViewTestCase(TestSetup):
         self.client.login(username='user1', password='12345')
         with open('media/default.png', 'rb') as upload_file:
             post_dict = {'name': 'event1',
-                         'date': '2012-12-12 12:12:12',
+                         'date': '2018-12-15 12:12:12',
                          'image': SimpleUploadedFile(upload_file.name, upload_file.read()),
                          'description': 'test',
                          'spots': '1',
                          'location': 'test',
                          'price': '12345',
-                         'enrollment_begin': '2012-12-12 12:12:12',
-                         'enrollment_end': '2012-12-12 12:12:12',
+                         'enrollment_begin': '2018-12-13 12:12:12',
+                         'enrollment_end': '2018-14-12 12:12:12',
                          }
             response = self.client.post('/add-event/', post_dict, follow=True)
             self.assertTemplateUsed(response, 'cosine/detail.html')
@@ -203,14 +203,14 @@ class ViewTestCase(TestSetup):
         self.client.login(username='test_user', password='12345')
         with open('media/default.png', 'rb') as upload_file:
             post_dict = {'name': 'event1',
-                         'date': '2012-12-12 12:12:12',
+                         'date': '2018-12-15 12:12:12',
                          'image': SimpleUploadedFile(upload_file.name, upload_file.read()),
                          'description': 'test',
                          'spots': '1',
                          'location': 'test',
                          'price': '12345',
-                         'enrollment_begin': '2012-12-12 12:12:12',
-                         'enrollment_end': '2012-12-12 12:12:12',
+                         'enrollment_begin': '2018-12-13 12:12:12',
+                         'enrollment_end': '2018-14-12 12:12:12',
                          }
             response = self.client.post('/event/{}/edit-event/'.format(self.event.id), post_dict, follow=True)
             self.assertTemplateUsed(response, 'cosine/detail.html')
@@ -219,13 +219,13 @@ class ViewTestCase(TestSetup):
         self.client.login(username='test_user', password='12345')
 
         response = self.client.post('/event/{}/edit-event/'.format(self.event.id), {'name': 'event1',
-                                                                                    'date': '2012-12-12 12:12:12',
+                                                                                    'date': '2018-12-15 12:12:12',
                                                                                     'description': 'test',
                                                                                     'spots': '1',
                                                                                     'location': 'test',
                                                                                     'price': '12345',
-                                                                                    'enrollment_begin': '2012-12-12 12:12:12',
-                                                                                    'enrollment_end': '2012-12-12 12:12:12',
+                                                                                    'enrollment_begin': '2018-12-13 12:12:12',
+                                                                                    'enrollment_end': '2018-14-12 12:12:12',
                                                                                     }, follow=True)
         self.assertTemplateUsed(response, 'cosine/detail.html')
 
@@ -233,13 +233,13 @@ class ViewTestCase(TestSetup):
         self.client.login(username='test_user_2', password='12345')
 
         response = self.client.post('/event/1/edit-event/', {'name': 'event1',
-                                                             'date': '2012-12-12 12:12:12',
+                                                             'date': '2018-12-15 12:12:12',
                                                              'description': 'test',
                                                              'spots': '1',
                                                              'location': 'test',
                                                              'price': '12345',
-                                                             'enrollment_begin': '2012-12-12 12:12:12',
-                                                             'enrollment_end': '2012-12-12 12:12:12',
+                                                             'enrollment_begin': '2018-12-13 12:12:12',
+                                                             'enrollment_end': '2018-14-12 12:12:12',
                                                              }, follow=True)
         self.assertEqual(response.status_code, 403)
 
@@ -362,13 +362,13 @@ class FormTest(TestCase):
     def test_event_form_with_file(self):
         upload_file = open('media/default.png', 'rb')
         post_dict = {'name': 'event1',
-                     'date': '2012-12-12 12:12:12',
+                     'date': '2018-12-15 12:12:12',
                      'description': 'test',
                      'spots': '1',
                      'location': 'test',
                      'price': '12345',
-                     'enrollment_begin': '2012-12-12 12:12:12',
-                     'enrollment_end': '2012-12-12 12:12:12',
+                     'enrollment_begin': '2018-12-13 12:12:12',
+                     'enrollment_end': '2018-12-14 12:12:12',
                      }
         file_dict = {'file': SimpleUploadedFile(upload_file.name, upload_file.read())}
         form = EventForm(post_dict, file_dict)
@@ -376,39 +376,39 @@ class FormTest(TestCase):
 
     def test_event_form_without_file(self):
         post_dict = {'name': 'event1',
-                     'date': '2012-12-12 12:12:12',
+                     'date': '2018-12-15 12:12:12',
                      'description': 'test',
                      'spots': '1',
                      'location': 'test',
                      'price': '12345',
-                     'enrollment_begin': '2012-12-12 12:12:12',
-                     'enrollment_end': '2012-12-12 12:12:12',
+                     'enrollment_begin': '2018-12-13 12:12:12',
+                     'enrollment_end': '2018-12-14 12:12:12',
                      }
         form = EventForm(post_dict)
         self.assertTrue(form.is_valid())
 
     def test_event_form_proper_price(self):
         post_dict = {'name': 'event1',
-                     'date': '2012-12-12 12:12:12',
+                     'date': '2018-12-15 12:12:12',
                      'description': 'test',
                      'spots': '1',
                      'location': 'test',
                      'price': '-12345',
-                     'enrollment_begin': '2012-12-12 12:12:12',
-                     'enrollment_end': '2012-12-12 12:12:12',
+                     'enrollment_begin': '2018-12-13 12:12:12',
+                     'enrollment_end': '2018-12-14 12:12:12',
                      }
         form = EventForm(post_dict)
         self.assertFalse(form.is_valid())
 
     def test_event_form_proper_number_of_spots(self):
         post_dict = {'name': 'event1',
-                     'date': '2012-12-12 12:12:12',
+                     'date': '2018-12-15 12:12:12',
                      'description': 'test',
                      'spots': '-1',
                      'location': 'test',
                      'price': '12345',
-                     'enrollment_begin': '2012-12-12 12:12:12',
-                     'enrollment_end': '2012-12-12 12:12:12',
+                     'enrollment_begin': '2018-12-13 12:12:12',
+                     'enrollment_end': '2018-12-14 12:12:12',
                      }
         form = EventForm(post_dict)
         self.assertFalse(form.is_valid())

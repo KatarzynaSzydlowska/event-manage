@@ -57,16 +57,21 @@ class ViewTestCase(TestSetup):
     def test_mail_sending_for_event_participant(self):
         self.client.login(username='test_user_2', password='12345')
         response = self.client.get(reverse('mailing_engine:send_info', kwargs={'event_id': self.event.id}))
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'mailing_engine/send_info.html')
 
     @unittest.expectedFailure
     def test_mail_sending_for_event_owner(self):
         self.client.login(username='test_user', password='12345')
         response = self.client.get(reverse('mailing_engine:send_info', kwargs={'event_id': 1}))
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
 
     def test_send_message_for_event_owner(self):
         self.client.login(username='test_user', password='12345')
         response = self.client.get(reverse('mailing_engine:send_message', kwargs={'event_id': self.event.id}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_send_message_for_event_owner_post(self):
+        self.client.login(username='test_user', password='12345')
+        response = self.client.post(reverse('mailing_engine:send_message', kwargs={'event_id': self.event.id}))
         self.assertEqual(response.status_code, 200)

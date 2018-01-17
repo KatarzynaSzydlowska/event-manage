@@ -66,7 +66,7 @@ class EventForm(forms.ModelForm):
             raise forms.ValidationError("Enrollment cannot start before now!")
         if cd['enrollment_begin'] > cd['date']:
             raise forms.ValidationError("Enrollment begin date cannot be later than event date!")
-        if cd['enrollment_end'] > cd['enrollment_begin']:
+        if cd['enrollment_end'] < cd['enrollment_begin']:
             raise forms.ValidationError("Enrollment end date cannot be earlier than enrollment begin date!")
         if cd['enrollment_end'] > cd['date']:
             raise forms.ValidationError("Enrollment end date cannot be later than event date!")

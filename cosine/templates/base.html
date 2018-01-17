@@ -10,6 +10,7 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="//cdn.bootcss.com/moment.js/2.17.1/moment.min.js"></script>
     <script src="//cdn.bootcss.com/bootstrap-datetimepicker/4.17.44/js/bootstrap-datetimepicker.min.js"></script>
+    {% load static %}
     <style>
 
     .navbar {
@@ -20,19 +21,11 @@
     .row.content {
         height: 150vh;
         min-height: 1000%;
-        background: url(/media/7.png) repeat center fixed;
+        background: url('{% static '7.png' %}') repeat center fixed;
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
         background-size: cover;
-    }
-
-    events-container{
-        <!--background: url(/media/5.jpg) repeat center fixed;-->
-        <!-- -webkit-background-size: cover;-->
-        <!-- -moz-background-size: cover;-->
-        <!-- -o-background-size: cover;-->
-        <!--background-size: cover;-->
     }
 
     .imgContainer {
@@ -54,7 +47,7 @@
 
     .col-sm-1 {
         padding-top: 20px;
-        background: url(/media/6.png) repeat fixed;
+        background: url('{% static '6.png' %}') repeat fixed;
 	    height: 100vh;
 	    margin: 0;
     }

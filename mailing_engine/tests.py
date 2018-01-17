@@ -54,15 +54,15 @@ class FormTest(TestSetup):
 class ViewTestCase(TestSetup):
     def test_mail_sending_for_event_participant(self):
         self.client.login(username='test_user_2', password='12345')
-        response = self.client.get(reverse('/event/1/send_info', kwargs={'event_id': self.event.id}))
+        response = self.client.get('send_info', kwargs={'event_id': self.event.id})
         self.assertEqual(response.status_code, 200)
 
     def test_mail_sending_for_event_owner(self):
         self.client.login(username='test_user', password='12345')
-        response = self.client.get(reverse('send_info', kwargs={'event_id': self.event.id}))
+        response = self.client.get('send_info', kwargs={'event_id': self.event.id})
         self.assertEqual(response.status_code, 200)
 
     def test_send_message_for_event_owner(self):
         self.client.login(username='test_user', password='12345')
-        response = self.client.get('/event/1/send_message.html', follow=True)
+        response = self.client.get('send_message', follow=True)
         self.assertEqual(response.status_code, 200)

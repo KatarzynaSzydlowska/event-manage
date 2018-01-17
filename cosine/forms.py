@@ -2,8 +2,8 @@ from django.contrib.auth.models import User
 from django import forms
 from .models import Event, Comment
 from django.contrib.admin.widgets import AdminDateWidget
+from django.utils import timezone
 import datetime
-import pytz
 
 
 class LoginForm(forms.Form):
@@ -59,8 +59,7 @@ class EventForm(forms.ModelForm):
 
     def clean(self):
         cd = self.cleaned_data
-        now = datetime.datetime.now()
-        now = pytz.utc.localize(now)
+        now = timezone.now()
         if cd['date'] < now:
             raise forms.ValidationError("Date should be later than now!")
         if cd['enrollment_begin'] < now:

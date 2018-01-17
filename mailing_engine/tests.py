@@ -21,7 +21,7 @@ class TestSetup(TestCase):
                                           enrollment_begin=timezone.now(),
                                           enrollment_end=timezone.now()+ timezone.timedelta(minutes=100),
                                           owner=self.user_1)
-        self.event.participants.add(self.user_1, self.user_2)
+        self.event.participants.add( self.user_2)
         self.event.save()
         self.event2 = Event.objects.create(name="test", date=timezone.now(), description="test event", spots=10,
                                            price=100,
@@ -63,7 +63,7 @@ class ViewTestCase(TestSetup):
     @unittest.expectedFailure
     def test_mail_sending_for_event_owner(self):
         self.client.login(username='test_user', password='12345')
-        response = self.client.get(reverse('mailing_engine:send_info', kwargs={'event_id': 1}))
+        response = self.client.get(reverse('mailing_engine:send_info', kwargs={'event_id': self.event.id}))
         self.assertEqual(response.status_code, 200)
 
     def test_send_message_for_event_owner(self):

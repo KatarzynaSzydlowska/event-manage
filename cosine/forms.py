@@ -3,6 +3,7 @@ from django import forms
 from .models import Event, Comment
 from django.contrib.admin.widgets import AdminDateWidget
 import datetime
+import pytz
 
 
 class LoginForm(forms.Form):
@@ -32,7 +33,7 @@ class RegistrationForm(forms.ModelForm):
 class EventForm(forms.ModelForm):
     name = forms.CharField()
     date = forms.DateTimeField(widget=forms.widgets.DateInput(attrs={'class': 'datetimepicker'}))
-    description = forms.CharField(widget=forms.Textarea)
+    description = forms.CharField(widget=forms.Textarea( attrs={'rows': 3, 'cols': 25}))
     spots = forms.IntegerField()
     location = forms.CharField()  # TODO,  change to some location framework
     price = forms.FloatField()
@@ -55,6 +56,21 @@ class EventForm(forms.ModelForm):
         if cd['price']<0:
             raise forms.ValidationError("Price should be at least 0!")
         return cd['price']
+
+    def clean(self):
+        cd = self.cleaned_data
+        now = datetime.datetime.now()
+        now = pytz.utc.localize(now)
+        if cd['date'] < now:
+            raise forms.ValidationError("Date should be later than now!")
+        if cd['enrollment_begin'] < now:
+            raise forms.ValidationError("Enrollment cannot start before now!")
+        if cd['enrollment_begin'] > cd['date']:
+            raise forms.ValidationError("Enrollment begin date cannot be later than event date!")
+        if cd['enrollment_end'] < cd['enrollment_begin']:
+            raise forms.ValidationError("Enrollment end date cannot be earlier than enrollment begin date!")
+        if cd['enrollment_end'] > cd['date']:
+            raise forms.ValidationError("Enrollment end date cannot be later than event date!")
 
 class CommentForm(forms.ModelForm):
 	class Meta:

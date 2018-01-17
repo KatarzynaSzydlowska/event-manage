@@ -169,6 +169,76 @@ class ViewTestCase(TestSetup):
                                                     }, follow=True)
         self.assertTemplateUsed(response, 'cosine/detail.html')
 
+    def test_add_event_view_if_wrong_date1(self):
+        self.client.login(username='user1', password='12345')
+
+        response = self.client.post('/add-event/', {'name': 'event1',
+                                                    'date': '2017-12-15 12:12:12',
+                                                    'description': 'test',
+                                                    'spots': '1',
+                                                    'location': 'test',
+                                                    'price': '12345',
+                                                    'enrollment_begin': '2018-12-13 12:12:12',
+                                                    'enrollment_end': '2018-12-14 12:12:12',
+                                                    }, follow=True)
+        self.assertTemplateUsed(response, 'cosine/add_edit_event.html')
+
+    def test_add_event_view_if_wrong_date2(self):
+        self.client.login(username='user1', password='12345')
+
+        response = self.client.post('/add-event/', {'name': 'event1',
+                                                    'date': '2018-12-15 12:12:12',
+                                                    'description': 'test',
+                                                    'spots': '1',
+                                                    'location': 'test',
+                                                    'price': '12345',
+                                                    'enrollment_begin': '2017-12-13 12:12:12',
+                                                    'enrollment_end': '2018-12-14 12:12:12',
+                                                    }, follow=True)
+        self.assertTemplateUsed(response, 'cosine/add_edit_event.html')
+
+    def test_add_event_view_if_wrong_date3(self):
+        self.client.login(username='user1', password='12345')
+
+        response = self.client.post('/add-event/', {'name': 'event1',
+                                                    'date': '2018-01-15 12:12:12',
+                                                    'description': 'test',
+                                                    'spots': '1',
+                                                    'location': 'test',
+                                                    'price': '12345',
+                                                    'enrollment_begin': '2018-01-18 12:12:12',
+                                                    'enrollment_end': '2018-12-19 12:12:12',
+                                                    }, follow=True)
+        self.assertTemplateUsed(response, 'cosine/add_edit_event.html')
+
+    def test_add_event_view_if_wrong_date4(self):
+        self.client.login(username='user1', password='12345')
+
+        response = self.client.post('/add-event/', {'name': 'event1',
+                                                    'date': '2018-12-15 12:12:12',
+                                                    'description': 'test',
+                                                    'spots': '1',
+                                                    'location': 'test',
+                                                    'price': '12345',
+                                                    'enrollment_begin': '2018-12-17 12:12:12',
+                                                    'enrollment_end': '2018-12-16 12:12:12',
+                                                    }, follow=True)
+        self.assertTemplateUsed(response, 'cosine/add_edit_event.html')
+
+    def test_add_event_view_if_wrong_date5(self):
+        self.client.login(username='user1', password='12345')
+
+        response = self.client.post('/add-event/', {'name': 'event1',
+                                                    'date': '2018-12-15 12:12:12',
+                                                    'description': 'test',
+                                                    'spots': '1',
+                                                    'location': 'test',
+                                                    'price': '12345',
+                                                    'enrollment_begin': '2018-12-16 12:12:12',
+                                                    'enrollment_end': '2018-12-13 11:12:12',
+                                                    }, follow=True)
+        self.assertTemplateUsed(response, 'cosine/add_edit_event.html')
+
     def test_add_event_view_if_failed(self):
         self.client.login(username='user1', password='12345')
 

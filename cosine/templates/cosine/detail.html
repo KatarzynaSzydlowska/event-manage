@@ -55,7 +55,7 @@
                     </form>
                 {% endif %}
                 {% if user == 'enrolled' %}
-                    <a href="{% url 'mailing_engine:send_info' event.id  %}" class="btn btn-primary active" role="button">Send me info</a>
+                    <a href="{% url 'mailing_engine:send_info' event.id  %}" class="btn" role="button">Send me info</a>
                 {% endif %}
             </th>
             <th style="width:20%;padding-left: 20px;"> <img src="{{ event.qr_code.url }}" class="img-responsive"> </th>

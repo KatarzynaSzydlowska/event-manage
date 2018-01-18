@@ -57,8 +57,6 @@ class EventForm(forms.ModelForm):
             raise forms.ValidationError("Price should be at least 0!")
         return cd['price']
 
-<<<<<<< HEAD
-=======
     def clean(self):
         cd = self.cleaned_data
         now = timezone.now()
@@ -73,7 +71,6 @@ class EventForm(forms.ModelForm):
         if cd['enrollment_end'] > cd['date']:
             raise forms.ValidationError("Enrollment end date cannot be later than event date!")
 
->>>>>>> f690c726356042777a7ffcf09eb6aa31380f5247
 class CommentForm(forms.ModelForm):
 	class Meta:
 		model = Comment

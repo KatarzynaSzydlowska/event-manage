@@ -21,7 +21,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "(+lrm8zw2*akt%svuyll*b92z135u#r^a1l)o!$)^_=-#kdpw#"
+SECRET_KEY = "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"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -148,7 +148,7 @@ LOGOUT_URL = reverse_lazy('logout')
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_FILE_PATH = 'tmp/email-messages/'
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'dodek08'
+EMAIL_HOST_USER = 'dodek_pite'
 EMAIL_HOST_PASSWORD = 'pite1234'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True

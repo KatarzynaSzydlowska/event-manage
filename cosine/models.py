@@ -6,6 +6,8 @@ import qrcode
 import io
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import os
+from geoposition.fields import GeopositionField
+
 
 class Event(models.Model):
     name = models.CharField(max_length=200)
@@ -14,7 +16,8 @@ class Event(models.Model):
     spots = models.IntegerField()
     image = models.FileField(default='default.png')
     qr_code = models.FileField(upload_to='qrcodes',default='default.png')
-    location = models.CharField(max_length=200)  # TODO,  change to some location framework, mailing_engine requires this field to be string-convertable object!
+    location = models.CharField(max_length=200)
+    coordinates = GeopositionField()
     price = models.FloatField()
     enrollment_begin = models.DateTimeField()
     enrollment_end = models.DateTimeField()

@@ -29,6 +29,7 @@ DEBUG = True
 
 INSTALLED_APPS = [
     'cosine',
+    'mailing_engine',
     # 'cosine.apps.CosineConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -103,7 +104,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'CET'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -115,7 +116,7 @@ DATABASES['default'].update(dj_database_url.config(conn_max_age=500))
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Allow all host headers
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -138,3 +139,11 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 LOGIN_REDIRECT_URL = reverse_lazy('dashboard')
 LOGIN_URL = reverse_lazy('login')
 LOGOUT_URL = reverse_lazy('logout')
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_FILE_PATH = 'tmp/email-messages/'
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'dodek08'
+EMAIL_HOST_PASSWORD = 'pite1234'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

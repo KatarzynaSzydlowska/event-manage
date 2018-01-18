@@ -1,24 +1,39 @@
 {% extends "base.html" %}
 {% block title %}Create event{% endblock %}
 {% block body %}
+
+<style>
+    .btn {
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+    }
+
+    .btn:hover {
+        background-color: #e7e7e7;
+        color: black;
+    }
+
+</style>
+
+
 <script type="text/javascript">
   $(function() {
     $('.datetimepicker').datetimepicker({
             format:'YYYY-MM-DD HH:mm:ss'
         });
   });
-
-
 </script>
+
 <h1>{{ add_edit|title }} event</h1>
 <p>Fill out the form to {{ add_edit }} new event:</p>
 <form action="." method="post" enctype="multipart/form-data">
-    <table>
+    <table align="center" display="inline-block">
         {{ event_form.as_table }}
     </table>
     {% csrf_token %}
     <p>
-        <button type="submit" class="btn btn-primary active">Submit</button>
+        <button type="submit" class="btn">Submit</button>
     </p>
 </form>
 {% endblock %}

@@ -7,4 +7,5 @@ dropbox==6.9.0
 django-storages==1.6.5
 qrcode==5.3
 Pillow==5.0
-
+googlemaps==2.5.1
+django_geoposition==0.3.0

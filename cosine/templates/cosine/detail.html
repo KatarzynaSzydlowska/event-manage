@@ -84,8 +84,8 @@
     <div id="map"></div>
     <script>
         function initMap() {
-            var loc = {lat: event.coordinates.latitude, lng: event.coordinates.longitude};
-            var map = new google.maps.Map(document.getElementById('map'), {
+            var loc = { lat: {{event.coordinates.latitude}}, lng: {{event.coordinates.longitude}} };
+            var map = new google.maps.Map(document.getElementById('mapa'), {
                 zoom: 10,
                 center: loc
             });
@@ -99,6 +99,7 @@
     <script async defer
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEhoFnn8GIbgD-F0m8MfuM_pbAJKxhaf8&callback=initMap">
     </script>
+    <div id="mapa" style="width: 700px; height: 500px; border: 1px solid black; background: gray;"></div>
 </div>
 
 {% endblock %}

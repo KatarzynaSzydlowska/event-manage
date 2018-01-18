@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+    'maps'
 ]
 
 MIDDLEWARE = [
@@ -138,3 +139,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 LOGIN_REDIRECT_URL = reverse_lazy('dashboard')
 LOGIN_URL = reverse_lazy('login')
 LOGOUT_URL = reverse_lazy('logout')
+
+# Google API key
+GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyCEhoFnn8GIbgD-F0m8MfuM_pbAJKxhaf8'

@@ -3,7 +3,8 @@ from django import forms
 from .models import Event, Comment
 from django.contrib.admin.widgets import AdminDateWidget
 import datetime
-
+from geoposition.fields import GeopositionField
+# import maps.manager as maps -> potrzebne przy innym rozwiazaniu
 
 class LoginForm(forms.Form):
     username = forms.CharField()
@@ -34,14 +35,15 @@ class EventForm(forms.ModelForm):
     date = forms.DateTimeField(widget=forms.widgets.DateInput(attrs={'class': 'datetimepicker'}))
     description = forms.CharField(widget=forms.Textarea)
     spots = forms.IntegerField()
-    location = forms.CharField()  # TODO,  change to some location framework
+    location = forms.CharField()
+    coordinates = GeopositionField()
     price = forms.FloatField()
     enrollment_begin = forms.DateTimeField(widget=forms.widgets.DateInput(attrs={'class': 'datetimepicker'}))
     enrollment_end = forms.DateTimeField(widget=forms.widgets.DateInput(attrs={'class': 'datetimepicker'}))
 
     class Meta:
         model = Event
-        fields = ['name', 'date', 'image', 'description', 'spots', 'location', 'price', 'enrollment_begin',
+        fields = ['name', 'date', 'image', 'description', 'spots', 'location', 'coordinates', 'price', 'enrollment_begin',
                   'enrollment_end']
 
     def clean_spots(self):

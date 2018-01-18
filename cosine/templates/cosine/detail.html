@@ -77,4 +77,28 @@
     <h4>QR-Code-Link:</h4>
     <img src="{{ event.qr_code.url }}" class="img-responsive">
 </div>
+
+
+<div class="well text-left">
+    <h3>Map</h3>
+    <div id="map"></div>
+    <script>
+        function initMap() {
+            var loc = {lat: event.coordinates.latitude, lng: event.coordinates.longitude};
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 10,
+                center: loc
+            });
+
+            var marker = new google.maps.Marker({
+                position: loc,
+                map: map
+            });
+        }
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEhoFnn8GIbgD-F0m8MfuM_pbAJKxhaf8&callback=initMap">
+    </script>
+</div>
+
 {% endblock %}

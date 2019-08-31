@@ -88,4 +88,49 @@
     </table>
 </div>
 
+<div class="well text-left">
+    <h4>Description:</h4>
+    <p>{{ event.description }}</p>
+</div>
+{% if user == 'owner' or user == 'enrolled' %}
+    <div class="well text-left">
+        <h4>Participants:</h4>
+        <p>
+            {% for user in event.participants.all %}
+            <li>{{ user.username }}</li>
+            {% endfor %}
+        </p>
+    </div>
+
+    <div class="well text-left">
+		{% with comments.count as total_comments %}
+		<h2>
+			{{ total_comments }} comment{{ total_comments|pluralize:"s" }}
+		</h2>
+		{% endwith %}
+		{% for comment in comments %}
+			<div class="well comment">
+			<p class="info">
+				{{ comment.name }},
+				{{ comment.created }}
+			</p>
+			{{ comment.body|linebreaks }}
+			</div>
+			{% empty %}
+				<p>No comments yet.</p>
+		{% endfor %}
+
+				<h2>Add new comment</h2>
+				<form action="." method="post">
+					{{ comment_form.as_p }}
+					{% csrf_token %}
+					<p><input type="submit" value="Add comment"></p>
+				</form>
+{% endif %}
+    </div>
+
+<div class="well text-left">
+    <h4>QR-Code-Link:</h4>
+    <img src="{{ event.qr_code.url }}" class="img-responsive">
+</div>
 {% endblock %}
